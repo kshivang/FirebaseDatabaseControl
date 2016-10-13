@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,7 +108,11 @@ public class DatabaseFragment extends Fragment{
             customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((DatabaseActivity) getActivity()).onDatabaseFragment(keyValue.get("value"));
+                    if (keyValue.get("value").contains("{"))
+                        ((DatabaseActivity) getActivity()).onForwardTransverse(keyValue.get("key"));
+                    else {
+                        Toast.makeText(getContext(), "This is value not object!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }

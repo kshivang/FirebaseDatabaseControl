@@ -38,8 +38,8 @@ public class MainActivity extends AppCompatActivity{
             actionBar.setIcon(R.mipmap.ic_launcher);
             actionBar.setTitle(getString(R.string.firebase_database));
         }
-        appController = AppController.getInstance(MainActivity.this);
         etUrl = (EditText) findViewById(R.id.etUrl);
+        appController = AppController.getInstance(MainActivity.this);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
     }
 
@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity{
                         view.setVisibility(View.VISIBLE);
                         if (response != null) {
                             startActivity(new Intent(MainActivity.this, DatabaseActivity.class)
-                                    .putExtra("response", response));
+                                    .putExtra("response", response)
+                                    .putExtra("base", url.substring(0, url.indexOf("/.json"))));
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity{
                 }) {
             @Override
             public Priority getPriority() {
-                return Priority.IMMEDIATE;
+                return Priority.HIGH;
             }
         };
         request.setShouldCache(false);
