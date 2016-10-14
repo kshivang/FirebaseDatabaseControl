@@ -2,6 +2,15 @@
     <string name="app_name">Firebase Database Control</string>
     <string name="firebase_database">Firebase Database</string>
     <string name="control">Control</string>
+    <string name="read">Read</string>
     <string name="firebase_base_url">Firebase Base URL</string>
     <string name="https_fir_databasecontrol_firebaseio_com">https://example.firebaseio.com/</string>
+    <string name="go">Go</string>
+    <string name="base_url_init">https://.firebaseio.com</string>
+    <string name="note">Note: To use this app, your database rule must be authorized
+        read access to public.</string>
+    <string name="help">Help</string>
+    <string name="welcome">Welcome</string>
+    <string name="message_slide_one">This app is exclusively made for firebase user and developer</string>
+    <string name="exit">exit</string>
 </resources>

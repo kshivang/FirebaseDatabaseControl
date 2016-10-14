@@ -102,8 +102,13 @@ public class DatabaseFragment extends Fragment{
         public void onBindViewHolder(CustomViewHolder customViewHolder, int position) {
             final Map<String, String> keyValue = mKeyValueList.get(position);
 
-            customViewHolder.tvKey.setText(String.format("Key    :   %s", keyValue.get("key")));
-            customViewHolder.tvValue.setText(String.format("Value :   %s", keyValue.get("value")));
+            customViewHolder.tvKey.setText(String.format("%s", keyValue.get("key")));
+            if (!keyValue.get("value").contains("{")) {
+                customViewHolder.tvValue.setVisibility(View.VISIBLE);
+                customViewHolder.tvValue.setText(String.format("Value :   %s", keyValue.get("value")));
+            } else {
+                customViewHolder.tvValue.setVisibility(View.GONE);
+            }
 
             customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -111,7 +116,7 @@ public class DatabaseFragment extends Fragment{
                     if (keyValue.get("value").contains("{"))
                         ((DatabaseActivity) getActivity()).onForwardTransverse(keyValue.get("key"));
                     else {
-                        Toast.makeText(getContext(), "This is value not object!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "This is value!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

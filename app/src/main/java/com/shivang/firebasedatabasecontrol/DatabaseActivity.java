@@ -1,10 +1,14 @@
 package com.shivang.firebasedatabasecontrol;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,6 +29,7 @@ public class DatabaseActivity extends AppCompatActivity{
     private AppController appController;
     private View progressBar;
     private View view;
+    private EditText etUrl;
     private boolean internetActive = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +37,35 @@ public class DatabaseActivity extends AppCompatActivity{
         setContentView(R.layout.actvity_database);
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setIcon(R.mipmap.ic_launcher);
-            actionBar.setTitle(getString(R.string.firebase_database));
-        }
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        etUrl = (EditText) findViewById(R.id.etUrl);
         base = getIntent().getStringExtra("base");
         current = base;
+        etUrl.append(current);
         appController = AppController.getInstance(DatabaseActivity.this);
         progressBar = findViewById(R.id.progress_bar);
         view = findViewById(R.id.fragment);
         onDatabaseFragment(getIntent().getStringExtra("response"));
+    }
+
+    public void go(View view) {
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        if (!TextUtils.isEmpty(etUrl.getText())) {
+            current = etUrl.getText().toString();
+            if (!current.contains(base)) {
+                base = current;
+            }
+            if (!current.contains("{")) {
+                onUrlRequest(current + "/.json");
+            } else {
+                onUrlRequest(current + ".json");
+            }
+        }
     }
 
     private void onDatabaseFragment(String response) {
@@ -55,15 +79,21 @@ public class DatabaseActivity extends AppCompatActivity{
 
     public void onForwardTransverse(String key) {
         current = current + "/" + key;
+        etUrl.setText("");
+        etUrl.append(current);
         onUrlRequest(current + ".json");
     }
 
     private void onBackwardTransverse() {
         current = current.substring(0, current.lastIndexOf("/"));
         if (current.equals(base)) {
+            etUrl.setText("");
+            etUrl.append(current);
             onUrlRequest(current + "/.json");
             return;
         }
+        etUrl.setText("");
+        etUrl.append(current);
         onUrlRequest(current + ".json");
     }
 

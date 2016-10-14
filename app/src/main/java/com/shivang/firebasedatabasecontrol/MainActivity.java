@@ -1,5 +1,6 @@
 package com.shivang.firebasedatabasecontrol;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +8,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -19,6 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 
 /**
  * Created by kshivang on 13/10/16.
+ *
  */
 
 public class MainActivity extends AppCompatActivity{
@@ -39,8 +45,39 @@ public class MainActivity extends AppCompatActivity{
             actionBar.setTitle(getString(R.string.firebase_database));
         }
         etUrl = (EditText) findViewById(R.id.etUrl);
+        etUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(etUrl.getText())) {
+                    etUrl.setText(R.string.base_url_init);
+                    etUrl.setSelection(8);
+                }
+            }
+        });
         appController = AppController.getInstance(MainActivity.this);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)  {
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+//            case R.id.action_help :
+//                break;
+            case R.id.action_exit :
+                finish();
+        }
+
+        return onOptionsItemSelected(item);
     }
 
     @Override
@@ -49,10 +86,16 @@ public class MainActivity extends AppCompatActivity{
         appController.cancelPendingRequests(TAG);
     }
 
-    public void control(View view) {
+    public void read(View view) {
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
         appController.cancelPendingRequests(TAG);
         if (etUrl != null && !TextUtils.isEmpty(etUrl.getText())) {
-            view.setVisibility(View.GONE);
+            if (view != null)
+                view.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
             String url = etUrl.getText().toString();
             if (!url.contains(".json")) {
@@ -61,7 +104,6 @@ public class MainActivity extends AppCompatActivity{
                 }
                 else url = url + "/.json";
             }
-
             onBaseUrlRequest(url, view);
         }
     }
