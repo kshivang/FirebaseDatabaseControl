@@ -18,6 +18,10 @@ import com.android.volley.toolbox.StringRequest;
 
 /**
  * Created by kshivang on 13/10/16.
+ * Contributors may mention there name below
+ * Shivang
+ *
+ *
  * This activity just hold the fragment
  */
 
@@ -85,7 +89,12 @@ public class DatabaseActivity extends AppCompatActivity{
     }
 
     public void onRefresh() {
-        onUrlRequest(currentURL + ".json");
+        if (currentURL.equals(baseURL))
+            onUrlRequest(currentURL + "/.json");
+        else {
+            onUrlRequest(currentURL + ".json");
+        }
+
     }
 
     private void onBackwardTransverse() {
@@ -142,10 +151,10 @@ public class DatabaseActivity extends AppCompatActivity{
     }
 
     public String getCurrentURL() {
-        if (currentURL.equals(baseURL)) {
-            return currentURL + "/.json";
-        } else {
-            return currentURL + ".json";
-        }
+        return currentURL;
+    }
+
+    public Boolean isBaseUrl() {
+        return baseURL.equals(currentURL);
     }
 }

@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
     <include layout="@layout/appbar"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,11 +51,8 @@
                     android:id="@+id/etUrl"
                     android:inputType="textUri" />
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    style="@style/buttonStyle"
                     android:layout_marginTop="30dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:textColor="@android:color/white"
                     android:text="@string/read"
                     android:onClick="read"
                     />

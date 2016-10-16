@@ -17,6 +17,8 @@
     <string name="currently_unavailable">JSON type is current unavailable</string>
     <string name="true_value">True</string>
     <string name="false_value">False</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
 
     <array name="value_type">
         <item>String</item>

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +16,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +40,11 @@ import java.util.Map;
 
 /**
  * Created by kshivang on 14/10/16.
+ * Contributors may mention there name below
+ * Shivang
  *
+ *
+ * This Fragment hold a single instance of Database
  */
 
 public class DatabaseFragment extends Fragment{
@@ -118,38 +127,84 @@ public class DatabaseFragment extends Fragment{
         }
 
         @Override
-        public void onBindViewHolder(CustomViewHolder customViewHolder, int position) {
+        public void onBindViewHolder(final CustomViewHolder customViewHolder, int position) {
             final Map<String, String> keyValue = mKeyValueList.get(position);
 
             customViewHolder.tvKey.setText(keyValue.get("key"));
+
             if (keyValue.get("value").contains("{")) {
                 customViewHolder.tvValue.setVisibility(View.GONE);
                 customViewHolder.tvValueTitle.setVisibility(View.GONE);
+                customViewHolder.btEdit.setVisibility(View.GONE);
             } else {
                 customViewHolder.tvValue.setVisibility(View.VISIBLE);
                 customViewHolder.tvValueTitle.setVisibility(View.VISIBLE);
+                customViewHolder.btEdit.setVisibility(View.VISIBLE);
                 customViewHolder.tvValue.setText(String.format(" %s", keyValue.get("value")));
             }
+
+
+            customViewHolder.ivExpandViewToggle.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (customViewHolder.llExpandView.getVisibility() == View.VISIBLE) {
+                                customViewHolder.llExpandView.setVisibility(View.GONE);
+                                customViewHolder.ivExpandViewToggle.setImageDrawable(
+                                        ContextCompat.getDrawable(getContext(),
+                                                R.drawable.ic_more_vert));
+                            } else {
+                                customViewHolder.llExpandView.setVisibility(View.VISIBLE);
+                                customViewHolder.ivExpandViewToggle.setImageDrawable(
+                                        ContextCompat.getDrawable(getContext(),
+                                                R.drawable.ic_arrow_drop_up));
+                            }
+                        }
+                    });
 
             customViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     String value = keyValue.get("value");
                     String key = keyValue.get("key");
+
                     if (value.contains("{")) {
                         ((DatabaseActivity) getActivity())
                                 .onForwardTransverse(key);
                     } else {
-                        if (value.contains(Boolean.FALSE.toString()) ||
-                                value.contains(Boolean.TRUE.toString())) {
-                            onValueType(FLAG_BOOLEAN, key);
-                        } else if (TextUtils.isDigitsOnly(value) ||
-                                (value.contains("-") &&
-                                        TextUtils.isDigitsOnly(value.substring(1)))) {
-                            onValueType(FLAG_INT, key);
-                        } else
-                            onValueType(FLAG_STRING, key);
+                        customViewHolder.llExpandView.setVisibility(View.VISIBLE);
+                        customViewHolder.ivExpandViewToggle.setImageDrawable(
+                                ContextCompat.getDrawable(getContext(),
+                                        R.drawable.ic_arrow_drop_up));
                     }
+
+
+                }
+            });
+
+            customViewHolder.btDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onValueDelete(keyValue.get("key"));
+                }
+            });
+
+            customViewHolder.btEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String value = keyValue.get("value");
+                    String key = keyValue.get("key");
+
+                    if (value.contains(Boolean.FALSE.toString()) ||
+                            value.contains(Boolean.TRUE.toString())) {
+                        onValueType(FLAG_BOOLEAN, key);
+                    } else if (TextUtils.isDigitsOnly(value) ||
+                            (value.contains("-") &&
+                                    TextUtils.isDigitsOnly(value.substring(1)))) {
+                        onValueType(FLAG_INT, key);
+                    } else
+                        onValueType(FLAG_STRING, key);
                 }
             });
         }
@@ -161,6 +216,9 @@ public class DatabaseFragment extends Fragment{
 
         class CustomViewHolder extends RecyclerView.ViewHolder {
             TextView tvKey, tvValue, tvValueTitle;
+            LinearLayout llExpandView;
+            ImageView ivExpandViewToggle;
+            Button btDelete, btEdit;
             CardView cardView;
 
             CustomViewHolder(View view) {
@@ -168,6 +226,10 @@ public class DatabaseFragment extends Fragment{
                 tvKey = (TextView) view.findViewById(R.id.tv_key);
                 tvValue = (TextView) view.findViewById(R.id.tv_value);
                 tvValueTitle = (TextView) view.findViewById(R.id.tv_value_title);
+                llExpandView = (LinearLayout) view.findViewById(R.id.expand_view);
+                ivExpandViewToggle = (ImageView) view.findViewById(R.id.expand_toggle);
+                btDelete = (Button)  view.findViewById(R.id.bt_delete);
+                btEdit = (Button) view.findViewById(R.id.bt_edit);
                 cardView = (CardView) view.findViewById(R.id.card);
             }
         }
@@ -296,10 +358,16 @@ public class DatabaseFragment extends Fragment{
                 object = new JSONObject(sMap);
         }
 
+
+        String url = ((DatabaseActivity) getActivity()).getCurrentURL();
+        if (((DatabaseActivity) getActivity()).isBaseUrl()) {
+            url = url + "/.json";
+        } else {
+            url = url + ".json";
+        }
+
         onProgress();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PATCH,
-                ((DatabaseActivity) getActivity()).getCurrentURL(),
-                object,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PATCH, url, object,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -324,6 +392,37 @@ public class DatabaseFragment extends Fragment{
         appController.addToRequestQueue(request, TAG);
     }
 
+    private void onValueDelete(String key) {
+
+        String url = ((DatabaseActivity) getActivity()).getCurrentURL() + "/" + key + ".json";
+
+        onProgress();
+        StringRequest request = new StringRequest(Request.Method.DELETE, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), "Value changed!", Toast.LENGTH_SHORT).show();
+                        ((DatabaseActivity)getActivity()).onRefresh();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                ((DatabaseActivity)getActivity()).onRefresh();
+            }
+        }) {
+            @Override
+            public Priority getPriority() {
+                return Priority.HIGH;
+            }
+        };
+        request.setShouldCache(false);
+        appController.addToRequestQueue(request, TAG);
+
+    }
+
     private ProgressDialog progressDialog;
 
     private void onProgress() {
@@ -331,4 +430,5 @@ public class DatabaseFragment extends Fragment{
         progressDialog.setMessage("Changing value");
         progressDialog.show();
     }
+
 }
