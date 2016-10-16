@@ -22,15 +22,15 @@ import com.android.volley.toolbox.StringRequest;
  */
 
 public class DatabaseActivity extends AppCompatActivity{
-    private String base;
-    private String current;
-    private static final String TAG = "base";
+    private String baseURL;
+    private String currentURL;
+    private static final String TAG = "Database";
 
     private AppController appController;
     private View progressBar;
     private View view;
     private EditText etUrl;
-    private boolean internetActive = true;
+    private boolean internetProblem = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +40,9 @@ public class DatabaseActivity extends AppCompatActivity{
         if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
         etUrl = (EditText) findViewById(R.id.etUrl);
-        base = getIntent().getStringExtra("base");
-        current = base;
-        etUrl.append(current);
+        baseURL = getIntent().getStringExtra("base");
+        currentURL = baseURL;
+        etUrl.append(currentURL);
         appController = AppController.getInstance(DatabaseActivity.this);
         progressBar = findViewById(R.id.progress_bar);
         view = findViewById(R.id.fragment);
@@ -56,14 +56,14 @@ public class DatabaseActivity extends AppCompatActivity{
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
         if (!TextUtils.isEmpty(etUrl.getText())) {
-            current = etUrl.getText().toString();
-            if (!current.contains(base)) {
-                base = current;
+            currentURL = etUrl.getText().toString();
+            if (!currentURL.contains(baseURL)) {
+                baseURL = currentURL;
             }
-            if (!current.contains("{")) {
-                onUrlRequest(current + "/.json");
+            if (!currentURL.contains("{")) {
+                onUrlRequest(currentURL + "/.json");
             } else {
-                onUrlRequest(current + ".json");
+                onUrlRequest(currentURL + ".json");
             }
         }
     }
@@ -78,23 +78,27 @@ public class DatabaseActivity extends AppCompatActivity{
     }
 
     public void onForwardTransverse(String key) {
-        current = current + "/" + key;
+        currentURL = currentURL + "/" + key;
         etUrl.setText("");
-        etUrl.append(current);
-        onUrlRequest(current + ".json");
+        etUrl.append(currentURL);
+        onUrlRequest(currentURL + ".json");
+    }
+
+    public void onRefresh() {
+        onUrlRequest(currentURL + ".json");
     }
 
     private void onBackwardTransverse() {
-        current = current.substring(0, current.lastIndexOf("/"));
-        if (current.equals(base)) {
+        currentURL = currentURL.substring(0, currentURL.lastIndexOf("/"));
+        if (currentURL.equals(baseURL)) {
             etUrl.setText("");
-            etUrl.append(current);
-            onUrlRequest(current + "/.json");
+            etUrl.append(currentURL);
+            onUrlRequest(currentURL + "/.json");
             return;
         }
         etUrl.setText("");
-        etUrl.append(current);
-        onUrlRequest(current + ".json");
+        etUrl.append(currentURL);
+        onUrlRequest(currentURL + ".json");
     }
 
     private void onUrlRequest(String url) {
@@ -104,7 +108,7 @@ public class DatabaseActivity extends AppCompatActivity{
                 (Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        internetActive = true;
+                        internetProblem = false;
                         if (response != null) {
                             onDatabaseFragment(response);
                         }
@@ -112,7 +116,7 @@ public class DatabaseActivity extends AppCompatActivity{
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        internetActive = false;
+                        internetProblem = true;
                         progressBar.setVisibility(View.GONE);
                         view.setVisibility(View.VISIBLE);
                         Toast.makeText(DatabaseActivity.this, "" + error.getLocalizedMessage(),
@@ -130,10 +134,18 @@ public class DatabaseActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed() {
-        if (!internetActive || current.equals(base)) {
+        if (internetProblem || currentURL.equals(baseURL)) {
             finish();
         } else {
             onBackwardTransverse();
+        }
+    }
+
+    public String getCurrentURL() {
+        if (currentURL.equals(baseURL)) {
+            return currentURL + "/.json";
+        } else {
+            return currentURL + ".json";
         }
     }
 }

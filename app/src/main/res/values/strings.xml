@@ -13,4 +13,21 @@
     <string name="welcome">Welcome</string>
     <string name="message_slide_one">This app is exclusively made for firebase user and developer</string>
     <string name="exit">exit</string>
+    <string name="value">Value :</string>
+    <string name="currently_unavailable">JSON type is current unavailable</string>
+    <string name="true_value">True</string>
+    <string name="false_value">False</string>
+
+    <array name="value_type">
+        <item>String</item>
+        <item>Integer</item>
+        <item>Boolean</item>
+        <item>Json</item>
+    </array>
+
+    <array name="bool_value">
+        <item>@string/true_value</item>
+        <item>@string/false_value</item>
+    </array>
+
 </resources>

@@ -41,7 +41,8 @@ public class SplashScreen extends AppCompatActivity{
                 // Android native animator
 
                 Animator animator =
-                        ViewAnimationUtils.createCircularReveal(rlHolder, 0, cy, 0, finalRadius * 2);
+                        ViewAnimationUtils.createCircularReveal(rlHolder, 0,
+                                cy, 0, finalRadius * 2);
                 animator.setInterpolator(new AccelerateDecelerateInterpolator());
                 animator.setDuration(1000);
                 animator.start();
