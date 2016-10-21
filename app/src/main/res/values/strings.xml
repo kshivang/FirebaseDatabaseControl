@@ -12,19 +12,31 @@
     <string name="help">Help</string>
     <string name="welcome">Welcome</string>
     <string name="message_slide_one">This app is exclusively made for firebase user and developer</string>
-    <string name="exit">exit</string>
+    <string name="exit">Exit</string>
     <string name="value">Value :</string>
     <string name="currently_unavailable">JSON type is current unavailable</string>
     <string name="true_value">True</string>
     <string name="false_value">False</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="put">Put</string>
+    <string name="post">Post</string>
+    <string name="open">Open</string>
+    <string name="no_node_here">No node here!</string>
+    <string name="intenet_problem">Check your internet</string>
+    <string name="nest">Nest</string>
+    <string name="patch">PATCH</string>
+    <string name="action">Action</string>
+    <string name="home">Home</string>
+    <string name="export">Export</string>
+    <string name="choose_file_name">Choose file name</string>
+    <string name="local_database">Local Database</string>
 
     <array name="value_type">
         <item>String</item>
         <item>Integer</item>
         <item>Boolean</item>
-        <item>Json</item>
     </array>
 
     <array name="bool_value">

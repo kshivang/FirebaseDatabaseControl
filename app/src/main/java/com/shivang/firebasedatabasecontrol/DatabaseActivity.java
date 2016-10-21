@@ -6,15 +6,20 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
+import static com.shivang.firebasedatabasecontrol.R.string.no_node_here;
 
 /**
  * Created by kshivang on 13/10/16.
@@ -31,7 +36,9 @@ public class DatabaseActivity extends AppCompatActivity{
     private static final String TAG = "Database";
 
     private AppController appController;
-    private View progressBar;
+    private View progressBarHolder;
+    private ProgressBar progressBar;
+    private TextView errorTest;
     private View view;
     private EditText etUrl;
     private boolean internetProblem = false;
@@ -48,7 +55,9 @@ public class DatabaseActivity extends AppCompatActivity{
         currentURL = baseURL;
         etUrl.append(currentURL);
         appController = AppController.getInstance(DatabaseActivity.this);
-        progressBar = findViewById(R.id.progress_bar);
+        progressBarHolder = findViewById(R.id.progress_bar_holder);
+        progressBar = (ProgressBar)  findViewById(R.id.progress_bar);
+        errorTest = (TextView) findViewById(R.id.error_text);
         view = findViewById(R.id.fragment);
         onDatabaseFragment(getIntent().getStringExtra("response"));
     }
@@ -73,12 +82,32 @@ public class DatabaseActivity extends AppCompatActivity{
     }
 
     private void onDatabaseFragment(String response) {
-        getSupportFragmentManager().
-                beginTransaction().replace(R.id.fragment,
-                DatabaseFragment.newInstance(response)).
-                commit();
+        if (response != null) {
+            getSupportFragmentManager().
+                    beginTransaction().replace(R.id.fragment,
+                    DatabaseFragment.newInstance(response)).
+                    commit();
+        } else {
+            progressBar.setVisibility(View.GONE);
+            view.setVisibility(View.GONE);
+            progressBarHolder.setVisibility(View.VISIBLE);
+            errorTest.setText(no_node_here);
+            errorTest.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void onFragmentSet(boolean isEmpty) {
         progressBar.setVisibility(View.GONE);
-        view.setVisibility(View.VISIBLE);
+        if (isEmpty) {
+            progressBarHolder.setVisibility(View.VISIBLE);
+            errorTest.setText(no_node_here);
+            errorTest.setVisibility(View.VISIBLE);
+            view.setVisibility(View.GONE);
+        } else {
+            progressBarHolder.setVisibility(View.GONE);
+            errorTest.setVisibility(View.GONE);
+            view.setVisibility(View.VISIBLE);
+        }
     }
 
     public void onForwardTransverse(String key) {
@@ -111,23 +140,27 @@ public class DatabaseActivity extends AppCompatActivity{
     }
 
     private void onUrlRequest(String url) {
+        progressBarHolder.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+        errorTest.setVisibility(View.GONE);
         view.setVisibility(View.GONE);
         StringRequest request =new StringRequest
                 (Request.Method.GET, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         internetProblem = false;
-                        if (response != null) {
-                            onDatabaseFragment(response);
-                        }
+                        onDatabaseFragment(response);
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         internetProblem = true;
+                        progressBarHolder.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
-                        view.setVisibility(View.VISIBLE);
+                        errorTest.setText(R.string.intenet_problem);
+                        errorTest.setVisibility(View.VISIBLE);
+
+                        view.setVisibility(View.GONE);
                         Toast.makeText(DatabaseActivity.this, "" + error.getLocalizedMessage(),
                                 Toast.LENGTH_LONG).show();
                     }
@@ -149,6 +182,18 @@ public class DatabaseActivity extends AppCompatActivity{
             onBackwardTransverse();
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     public String getCurrentURL() {
         return currentURL;

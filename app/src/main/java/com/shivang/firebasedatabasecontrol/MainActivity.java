@@ -1,10 +1,12 @@
 package com.shivang.firebasedatabasecontrol;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -21,6 +23,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 
 /**
  * Created by kshivang on 13/10/16.
@@ -73,8 +79,12 @@ public class MainActivity extends AppCompatActivity{
         switch (itemId) {
 //            case R.id.action_help :
 //                break;
+            case R.id.action_local_database:
+                onManageDatabase();
+                return true;
             case R.id.action_exit :
                 finish();
+                return true;
         }
 
         return onOptionsItemSelected(item);
@@ -126,7 +136,8 @@ public class MainActivity extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         progressBar.setVisibility(View.GONE);
                         view.setVisibility(View.VISIBLE);
-                        Toast.makeText(MainActivity.this, "" + error.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "" + error.getLocalizedMessage(),
+                                Toast.LENGTH_LONG).show();
                     }
                 }) {
             @Override
@@ -136,5 +147,99 @@ public class MainActivity extends AppCompatActivity{
         };
         request.setShouldCache(false);
         appController.addToRequestQueue(request, TAG);
+    }
+
+    private void onManageDatabase() {
+
+        final CharSequence[] files = fileNames();
+        if (files != null && files.length > 0) {
+            final boolean[] isCheckedItems = new boolean[files.length];
+            Arrays.fill(isCheckedItems, false);
+
+            new AlertDialog.Builder(this)
+                    .setMultiChoiceItems(files, isCheckedItems,
+                            new DialogInterface.OnMultiChoiceClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which, boolean isChecked) {
+                                    isCheckedItems[which] = isChecked;
+                                }
+                            })
+                    .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNeutralButton("Create", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            JsonCreator.onNodeAdd(new NodeModel(), JsonCreator.SAVE,
+                                    MainActivity.this);
+                        }
+                    })
+                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            boolean isDeleted = false;
+                            for (int i = 0; i < isCheckedItems.length; i++) {
+                                if (isCheckedItems[i]) {
+                                    File file = new File(getFilesDir().getAbsolutePath()
+                                            + "/" + files[i]);
+                                    if (file.exists()) {
+                                        //noinspection ResultOfMethodCallIgnored
+                                        file.delete();
+                                        isDeleted = true;
+                                    }
+                                }
+                            }
+                            if (isDeleted) {
+                                Toast.makeText(MainActivity.this, "Deleted",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                dialog.dismiss();
+                                onManageDatabase();
+                                Toast.makeText(MainActivity.this,
+                                        "You have not selected any database to delete",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).create().show();
+        } else {
+//            Toast.makeText(this, "You don't have any database instance saved!",
+//                    Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(this)
+                    .setMessage("Create new json database and save locally")
+                    .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            JsonCreator.onNodeAdd(new NodeModel(), JsonCreator.SAVE,
+                                    MainActivity.this);
+                        }
+                    })
+                    .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        }
+    }
+
+
+    private CharSequence[] fileNames() {
+        FilenameFilter jsonFilter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".json") || name.endsWith(".JSON");
+            }
+        };
+
+        File root = getFilesDir();
+        if (root != null && root.list().length > 0)
+            return root.list(jsonFilter);
+        return null;
     }
 }

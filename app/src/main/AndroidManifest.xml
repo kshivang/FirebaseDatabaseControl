@@ -23,8 +23,7 @@
 
         <activity android:name=".DatabaseActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
+            android:windowSoftInputMode="stateHidden"
             />
     </application>
 
