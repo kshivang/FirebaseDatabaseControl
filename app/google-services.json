@@ -49,6 +49,50 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343952546109:android:ba0444db15b13278",
+        "android_client_info": {
+          "package_name": "com.shivang.databasemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343952546109-04hn2l73eipt2gnvkjdap50bj47acp3t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shivang.databasemanager",
+            "certificate_hash": "71AAE5C1191292E07D68F3D30C47D86F7E2A1BEA"
+          }
+        },
+        {
+          "client_id": "343952546109-1uh67vikh7ksk16h2pc3qo5ej0l4vehg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUzFB3urusDWV43Gc9AZm5lkvTeHI31XQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343952546109-1uh67vikh7ksk16h2pc3qo5ej0l4vehg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
