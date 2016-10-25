@@ -1,7 +1,6 @@
 <resources>
-    <string name="app_name">Firebase Database Management</string>
+    <string name="app_name">Firebase Database Manager</string>
     <string name="firebase_database">Firebase Database</string>
-    <string name="management">Management</string>
     <string name="access">Access</string>
     <string name="firebase_base_url">Firebase Base URL</string>
     <string name="https_fir_databasecontrol_firebaseio_com">https://example.firebaseio.com/</string>
