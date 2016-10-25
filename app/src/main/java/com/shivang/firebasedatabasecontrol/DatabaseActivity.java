@@ -55,11 +55,16 @@ public class DatabaseActivity extends AppCompatActivity{
         currentURL = baseURL;
         etUrl.append(currentURL);
         appController = AppController.getInstance(DatabaseActivity.this);
+
         progressBarHolder = findViewById(R.id.progress_bar_holder);
         progressBar = (ProgressBar)  findViewById(R.id.progress_bar);
         errorTest = (TextView) findViewById(R.id.error_text);
         view = findViewById(R.id.fragment);
         onDatabaseFragment(getIntent().getStringExtra("response"));
+    }
+
+    public void home(View view) {
+        finish();
     }
 
     public void go(View view) {

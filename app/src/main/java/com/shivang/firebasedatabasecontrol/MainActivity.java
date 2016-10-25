@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity{
         appController.cancelPendingRequests(TAG);
     }
 
-    public void read(View view) {
+    public void Access(View view) {
         if (view != null) {
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);

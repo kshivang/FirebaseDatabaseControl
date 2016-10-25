@@ -24,6 +24,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:id="@+id/toolbar_view"
                 >
                 <EditText
                     android:layout_width="0dp"
@@ -75,14 +76,14 @@
             android:gravity="center"
             >
             <Button
-                android:id="@+id/bt_put"
+                android:id="@+id/bt_action"
                 style="@style/buttonStyle"
                 android:layout_margin="10dp"
                 android:text="@string/action"
                 />
             <Button
                 style="@style/buttonStyle"
-                android:id="@+id/bt_post"
+                android:onClick="home"
                 android:layout_margin="10dp"
                 android:text="@string/home"
                 />

@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -47,7 +49,7 @@ import static com.android.volley.Request.Method.PUT;
  *
  */
 
- class JsonCreator {
+class JsonCreator {
 
     static final int SAVE = 10;
     private static final String TAG = "Database";
@@ -168,22 +170,14 @@ import static com.android.volley.Request.Method.PUT;
     }
 
 
+
     static void onNodeAdd(@NonNull final NodeModel currentNode,
                                   final int method, final Context mContext) {
 
         ArrayList<String> keys = currentNode.getKeys();
 
-        View dialogView = View.inflate(mContext, R.layout.dialog_new_node, null);
-        final EditText input = (EditText) dialogView.findViewById(R.id.et_key);
-        ListView lvNodes = (ListView) dialogView.findViewById(R.id.list);
-        if (keys != null && keys.size() > 0) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext,
-                    android.R.layout.simple_list_item_1, keys);
-            lvNodes.setAdapter(adapter);
-        } else lvNodes.setVisibility(View.GONE);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
-                .setView(dialogView)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface alertDialog, int which) {
@@ -257,7 +251,50 @@ import static com.android.volley.Request.Method.PUT;
                     });
         }
 
+        View dialogView = View.inflate(mContext, R.layout.dialog_new_node, null);
+        builder.setView(dialogView);
+
         final AlertDialog alertDialog = builder.create();
+
+        final EditText input = (EditText) dialogView.findViewById(R.id.et_key);
+        RecyclerView lvNodes = (RecyclerView) dialogView.findViewById(R.id.list);
+        if (keys != null && keys.size() > 0) {
+//            ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext,
+//                    android.R.layout.simple_list_item_1, keys);
+            DatabaseRecyclerAdapter adapter = DatabaseRecyclerAdapter
+                    .newInstance(currentNode, mContext,
+                            new DatabaseRecyclerAdapter.Callback() {
+                        @Override
+                        void onKeysDelete(ArrayList<String> updatedKeys) {
+                            currentNode.setKeys(updatedKeys);
+                            alertDialog.dismiss();
+                            onNodeAdd(currentNode, method, mContext);
+                        }
+
+                        @Override
+                        void onClickItem(String key) {
+                            alertDialog.dismiss();
+                            onNodeAdd((NodeModel) currentNode.child(key),
+                                    method, mContext);
+                        }
+
+                        @Override
+                        void onEditValue(NodeModel currentNode, Class mClass) {
+                            alertDialog.dismiss();
+                            if (mClass == boolean.class || mClass == Boolean.class) {
+                                onValueType(currentNode, FLAG_BOOLEAN, mContext, PATCH);
+                            } else if (mClass == int.class || mClass == Integer.class) {
+                                onValueType(currentNode, FLAG_INT, mContext, PATCH);
+                            } else {
+                                onValueType(currentNode, FLAG_STRING, mContext, PATCH);
+                            }
+                        }
+                    });
+            lvNodes.setLayoutManager(new LinearLayoutManager(mContext));
+
+            lvNodes.setAdapter(adapter);
+        } else lvNodes.setVisibility(View.GONE);
+
 
         dialogView.findViewById(R.id.bt_value).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -409,7 +446,6 @@ import static com.android.volley.Request.Method.PUT;
                 }).create().show();
     }
 
-//    private static int method = 0;
     private static void onValueChange(final NodeModel currentNode, int identifiedType,
                                       final Context mContext, final int method) {
         final EditText input = new EditText(mContext);
@@ -525,7 +561,7 @@ import static com.android.volley.Request.Method.PUT;
         return root;
     }
 
-    private ArrayList<String> fileNames() {
+    ArrayList<String> fileNames() {
         FilenameFilter jsonFilter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -542,7 +578,7 @@ import static com.android.volley.Request.Method.PUT;
     static void exportFile(final String jsonStr, final Context mContext) {
         View dialogView = View.inflate(mContext, R.layout.dialog_file_name, null);
         final EditText etName = (EditText) dialogView.findViewById(R.id.et_file_name);
-        new AlertDialog.Builder(mContext)
+        AlertDialog alertDialog = new AlertDialog.Builder(mContext)
                 .setTitle("Choose name")
                 .setView(dialogView)
                 .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
@@ -565,7 +601,11 @@ import static com.android.volley.Request.Method.PUT;
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                }).create().show();
+                }).create();
+        if (alertDialog.getWindow() != null)
+            alertDialog.getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        alertDialog.show();
     }
 
 

@@ -73,19 +73,13 @@ public class DatabaseFragment extends Fragment{
 //        appController = AppController.getInstance(getContext());
         jsonCreator = JsonCreator.onCreate(getContext());
 
-        getActivity().findViewById(R.id.bt_put).setOnClickListener(new View.OnClickListener() {
+        getActivity().findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onActionClick();
             }
         });
-        getActivity().findViewById(R.id.bt_post).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                getActivity().finish();
-            }
-        });
         return rootView;
     }
 
@@ -109,14 +103,14 @@ public class DatabaseFragment extends Fragment{
                 jsonCreator.onAdd(PATCH);
             }
         });
-        dialogView.findViewById(R.id.bt_post).setOnClickListener(new View.OnClickListener() {
+        dialogView.findViewById(R.id.bt_home).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
                 jsonCreator.onAdd(POST);
             }
         });
-        dialogView.findViewById(R.id.bt_put).setOnClickListener(new View.OnClickListener() {
+        dialogView.findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -288,15 +282,28 @@ public class DatabaseFragment extends Fragment{
                                 ContextCompat.getDrawable(getContext(),
                                         R.drawable.ic_arrow_drop_up));
                     }
-
-
                 }
             });
 
             customViewHolder.btDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onValueDelete(keyValue.get("key"), getContext());
+                    new AlertDialog.Builder(getContext())
+                            .setMessage("Are sure you want to delete this node?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    onValueDelete(keyValue.get("key"), getContext());
+                                }
+                            })
+                            .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create().show();
                 }
             });
 

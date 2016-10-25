@@ -53,8 +53,8 @@
                 <Button
                     style="@style/buttonStyle"
                     android:layout_marginTop="30dp"
-                    android:text="@string/read"
-                    android:onClick="read"
+                    android:text="@string/access"
+                    android:onClick="Access"
                     />
                 <ProgressBar
                     android:layout_width="wrap_content"

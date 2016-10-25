@@ -18,13 +18,13 @@
             style="@style/buttonStyle"
             android:layout_margin="10dp"
             android:text="@string/post"
-            android:id="@+id/bt_post"
+            android:id="@+id/bt_home"
             />
         <Button
             style="@style/buttonStyle"
             android:layout_margin="10dp"
             android:text="@string/put"
-            android:id="@+id/bt_put"
+            android:id="@+id/bt_action"
             />
     </LinearLayout>
 
