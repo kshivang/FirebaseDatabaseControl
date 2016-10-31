@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorBackground"
     >
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_margin="15dp"
-        android:id="@+id/list"
-        android:layout_marginBottom="10dp"
-        />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal"
         android:padding="15dp"
         android:background="@android:color/white"
-        android:layout_below="@+id/list"
         android:id="@+id/ll_key"
         >
         <EditText
@@ -36,18 +28,25 @@
             android:hint="@string/choose_key"
             android:inputType="textUri" />
         <Button
-            android:layout_width="0dp"
+            android:layout_width="70sp"
             android:layout_height="35dp"
-            android:layout_weight="0.4"
             android:text="@string/nest"
             android:id="@+id/bt_sub_node"
             />
         <Button
-            android:layout_width="0dp"
+            android:layout_width="75dp"
             android:layout_height="35dp"
-            android:layout_weight="0.45"
             android:text="@string/value_"
             android:id="@+id/bt_value"
             />
     </LinearLayout>
-</RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="15dp"
+        android:id="@+id/list"
+        />
+
+
+</LinearLayout>

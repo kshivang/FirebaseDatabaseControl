@@ -11,13 +11,16 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -176,11 +179,15 @@ class JsonCreator {
 
         ArrayList<String> keys = currentNode.getKeys();
 
+        final View dialogView = View.inflate(mContext, R.layout.dialog_new_node, null);
+        final EditText input = (EditText) dialogView.findViewById(R.id.et_key);
+        RecyclerView lvNodes = (RecyclerView) dialogView.findViewById(R.id.list);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface alertDialog, int which) {
+
                         alertDialog.dismiss();
                         new AlertDialog.Builder(mContext)
                                 .setMessage("Are sure you want cancel," +
@@ -200,6 +207,7 @@ class JsonCreator {
                                 }).create().show();
                     }
                 });
+
         if (currentNode.getParent() == null) {
             String methodStr;
             switch (method) {
@@ -219,8 +227,16 @@ class JsonCreator {
                     .setPositiveButton(methodStr, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            InputMethodManager inputMethodManager = (InputMethodManager)mContext
+                                    .getSystemService(
+                                            Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager
+                                    .hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
+
                             dialog.dismiss();
-                            if (currentNode.getKeys() != null && currentNode.getKeys().size() > 0) {
+
+                            if (currentNode.getKeys() != null
+                                    && currentNode.getKeys().size() > 0) {
                                 if (method != SAVE)
                                     onDatabaseUpdate(onParse(currentNode, null), method, mContext);
                                 else exportFile(onParse(currentNode, null).toString(), mContext);
@@ -251,13 +267,10 @@ class JsonCreator {
                     });
         }
 
-        View dialogView = View.inflate(mContext, R.layout.dialog_new_node, null);
         builder.setView(dialogView);
 
         final AlertDialog alertDialog = builder.create();
 
-        final EditText input = (EditText) dialogView.findViewById(R.id.et_key);
-        RecyclerView lvNodes = (RecyclerView) dialogView.findViewById(R.id.list);
         if (keys != null && keys.size() > 0) {
 //            ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext,
 //                    android.R.layout.simple_list_item_1, keys);
@@ -299,6 +312,13 @@ class JsonCreator {
         dialogView.findViewById(R.id.bt_value).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                InputMethodManager inputMethodManager = (InputMethodManager)mContext
+                        .getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                inputMethodManager
+                        .hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
+
                 ArrayList<String> keys = currentNode.getKeys();
 
                 if (TextUtils.isEmpty(input.getText())) {
@@ -324,6 +344,12 @@ class JsonCreator {
         dialogView.findViewById(R.id.bt_sub_node).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager inputMethodManager = (InputMethodManager)mContext
+                        .getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                inputMethodManager
+                        .hideSoftInputFromWindow(dialogView.getWindowToken(), 0);
+
                 ArrayList<String> keys = currentNode.getKeys();
                 if (TextUtils.isEmpty(input.getText())) {
                     Toast.makeText(mContext, "Write some key value!",
@@ -348,7 +374,7 @@ class JsonCreator {
             }
         });
 
-        if (alertDialog.getWindow() != null)
+        if (alertDialog.getWindow() != null && input.requestFocus())
             alertDialog.getWindow().setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         alertDialog.show();
@@ -454,7 +480,7 @@ class JsonCreator {
         input.setLayoutParams(params);
         input.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -462,6 +488,7 @@ class JsonCreator {
                     }
                 })
                 .setTitle("Choose value");
+
         switch (identifiedType) {
             case FLAG_STRING:
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -476,6 +503,10 @@ class JsonCreator {
                             currentNode.setValues(input.getText().toString());
                         }
                         onNodeAdd(currentNode, method, mContext);
+                        InputMethodManager inputMethodManager = (InputMethodManager)mContext
+                                .getSystemService(
+                                Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(input.getWindowToken(), 0);
                     }
                 });
                 break;
@@ -508,6 +539,10 @@ class JsonCreator {
                             currentNode.setValues(intValue);
                             onNodeAdd(currentNode, method, mContext);
                         }
+                        InputMethodManager inputMethodManager = (InputMethodManager)mContext
+                                .getSystemService(
+                                        Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(input.getWindowToken(), 0);
                     }
                 });
                 break;
@@ -529,13 +564,64 @@ class JsonCreator {
                 break;
         }
 
-        AlertDialog alertDialog = builder.create();
+        final AlertDialog alertDialog = builder.create();
         if (identifiedType == FLAG_STRING || identifiedType == FLAG_INT) {
             if (alertDialog.getWindow() != null ) {
                 alertDialog.getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             }
         }
+        switch (identifiedType) {
+            case FLAG_STRING:
+                input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (TextUtils.isEmpty(input.getText()))
+                            Toast.makeText(mContext, "Empty string can't be set",
+                                    Toast.LENGTH_SHORT).show();
+                        else {
+                            currentNode.setValues(input.getText().toString());
+                        }
+                        onNodeAdd(currentNode, method, mContext);
+                        alertDialog.dismiss();
+                        return true;
+                    }
+                });
+                break;
+            case FLAG_INT:
+                input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        String inputStr;
+                        if (TextUtils.isEmpty(input.getText())) {
+                            Toast.makeText(mContext, "Empty integer can't be set",
+                                    Toast.LENGTH_SHORT).show();
+                            alertDialog.dismiss();
+                            return true;
+                        } else {
+                            inputStr = input.getText().toString();
+                        }
+                        if (TextUtils.isDigitsOnly(inputStr) || ((inputStr.contains("-") ||
+                                inputStr.contains("+")) &&
+                                TextUtils.isDigitsOnly(inputStr.substring(1)))) {
+                            int intValue;
+                            if (inputStr.contains("-")) {
+                                intValue = -1 * Integer.valueOf(inputStr.substring(1));
+                            } else if (inputStr.contains("+")) {
+                                intValue = Integer.valueOf(inputStr.substring(1));
+                            } else {
+                                intValue = Integer.valueOf(inputStr);
+                            }
+
+                            currentNode.setValues(intValue);
+                            onNodeAdd(currentNode, method, mContext);
+                        }
+                        alertDialog.dismiss();
+                        return true;
+                    }
+                });
+        }
+
         alertDialog.show();
     }
 
@@ -585,11 +671,17 @@ class JsonCreator {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (TextUtils.isEmpty(etName.getText())) {
-                            mCreateAndSaveFile(((DatabaseActivity) mContext)
-                                            .getCurrentURL()
-                                            .replace("https://", "")
-                                            .replaceAll("\\.", "_") + ".json",
-                                            jsonStr, mContext);
+                            if (mContext.getClass() == DatabaseActivity.class) {
+                                mCreateAndSaveFile(((DatabaseActivity) mContext)
+                                                .getCurrentURL()
+                                                .replace("https://", "")
+                                                .replaceAll("\\.", "_") + ".json",
+                                        jsonStr, mContext);
+                            } else {
+                                Toast.makeText(mContext, "You can't leave file name empty",
+                                        Toast.LENGTH_SHORT).show();
+                                exportFile(jsonStr, mContext);
+                            }
                         } else {
                             mCreateAndSaveFile(etName.getText() + ".json",
                                     jsonStr, mContext);

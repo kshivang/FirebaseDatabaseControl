@@ -40,6 +40,7 @@
                     android:textSize="18sp"
                     android:background="@drawable/border_rectangle"
                     android:id="@+id/etUrl"
+                    android:imeOptions="actionGo"
                     android:inputType="textUri" />
                 <Button
                     android:layout_width="0dp"
@@ -48,6 +49,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
                     android:text="@string/go"
+                    android:id="@+id/bt_go"
                     android:onClick="go"
                     />
             </LinearLayout>

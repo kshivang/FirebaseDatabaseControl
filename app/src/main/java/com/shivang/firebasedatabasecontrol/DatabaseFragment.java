@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -170,7 +171,12 @@ public class DatabaseFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                JsonCreator.exportFile(currentDatabase.toString(), getContext());
+                if (currentDatabase.toString() != null
+                        && !currentDatabase.toString().equals(""))
+                    JsonCreator.exportFile(currentDatabase.toString(), getContext());
+                else
+                    Toast.makeText(getContext(), "There is no data to export!",
+                            Toast.LENGTH_SHORT).show();
             }
         });
         dialog.show();

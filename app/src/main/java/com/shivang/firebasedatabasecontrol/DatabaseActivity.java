@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -55,6 +56,14 @@ public class DatabaseActivity extends AppCompatActivity{
         currentURL = baseURL;
         etUrl.append(currentURL);
         appController = AppController.getInstance(DatabaseActivity.this);
+
+        etUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                go(findViewById(R.id.bt_go));
+                return true;
+            }
+        });
 
         progressBarHolder = findViewById(R.id.progress_bar_holder);
         progressBar = (ProgressBar)  findViewById(R.id.progress_bar);

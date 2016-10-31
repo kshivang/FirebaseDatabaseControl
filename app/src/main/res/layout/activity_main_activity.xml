@@ -49,11 +49,13 @@
                     android:textSize="18sp"
                     android:background="@drawable/border_rectangle"
                     android:id="@+id/etUrl"
+                    android:imeOptions="actionGo"
                     android:inputType="textUri" />
                 <Button
                     style="@style/buttonStyle"
                     android:layout_marginTop="30dp"
                     android:text="@string/access"
+                    android:id="@+id/bt_access"
                     android:onClick="Access"
                     />
                 <ProgressBar
