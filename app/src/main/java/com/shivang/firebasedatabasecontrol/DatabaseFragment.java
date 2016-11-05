@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,9 +57,8 @@ public class DatabaseFragment extends Fragment{
     }
 
     private RecyclerView mRecyclerView;
-//    private AppController appController;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
-//    private int type  = -1;
     private final static int FLAG_STRING = 0, FLAG_INT = 1,
             FLAG_BOOLEAN = 2;
 
@@ -71,7 +71,6 @@ public class DatabaseFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_database, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//        appController = AppController.getInstance(getContext());
         jsonCreator = JsonCreator.onCreate(getContext());
 
         getActivity().findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {

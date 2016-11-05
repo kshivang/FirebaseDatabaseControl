@@ -2,6 +2,7 @@ package com.shivang.firebasedatabasecontrol;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,6 +44,8 @@ public class DatabaseActivity extends AppCompatActivity{
     private View view;
     private EditText etUrl;
     private boolean internetProblem = false;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,14 @@ public class DatabaseActivity extends AppCompatActivity{
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 go(findViewById(R.id.bt_go));
                 return true;
+            }
+        });
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                DatabaseActivity.this.onRefresh();
             }
         });
 
@@ -137,7 +148,6 @@ public class DatabaseActivity extends AppCompatActivity{
         else {
             onUrlRequest(currentURL + ".json");
         }
-
     }
 
     private void onBackwardTransverse() {
@@ -164,6 +174,7 @@ public class DatabaseActivity extends AppCompatActivity{
                     public void onResponse(String response) {
                         internetProblem = false;
                         onDatabaseFragment(response);
+                        mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -173,6 +184,7 @@ public class DatabaseActivity extends AppCompatActivity{
                         progressBar.setVisibility(View.GONE);
                         errorTest.setText(R.string.intenet_problem);
                         errorTest.setVisibility(View.VISIBLE);
+                        mSwipeRefreshLayout.setRefreshing(false);
 
                         view.setVisibility(View.GONE);
                         Toast.makeText(DatabaseActivity.this, "" + error.getLocalizedMessage(),
