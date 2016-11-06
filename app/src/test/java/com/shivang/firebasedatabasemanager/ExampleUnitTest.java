@@ -1,4 +1,4 @@
-package com.shivang.firebasedatabasecontrol;
+package com.shivang.firebasedatabasemanager;
 
 import org.junit.Test;
 

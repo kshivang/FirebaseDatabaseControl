@@ -1,4 +1,4 @@
-package com.shivang.firebasedatabasecontrol;
+package com.shivang.firebasedatabasemanager;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

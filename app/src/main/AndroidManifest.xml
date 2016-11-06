@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:installLocation="preferExternal"
-    package="com.shivang.firebasedatabasecontrol">
+    package="com.shivang.firebasedatabasemanager">
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
-        <activity android:name=".SplashScreen"
+        <activity android:name="com.shivang.firebasedatabasemanager.SplashScreen"
             android:screenOrientation="portrait"
             >
             <intent-filter>
@@ -20,11 +20,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity"
+        <activity android:name="com.shivang.firebasedatabasemanager.MainActivity"
             android:screenOrientation="portrait"
             />
 
-        <activity android:name=".DatabaseActivity"
+        <activity android:name="com.shivang.firebasedatabasemanager.DatabaseActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
             />
