@@ -34,6 +34,7 @@
     <string name="local_database">Local Database</string>
     <string name="value_">Value</string>
     <string name="choose_key">Choose key</string>
+    <string name="error_loading_value">Error Loading Value</string>
 
     <array name="value_type">
         <item>String</item>

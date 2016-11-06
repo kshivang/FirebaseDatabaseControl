@@ -49,35 +49,43 @@ class DatabaseRecyclerAdapter
 
     @Override
     public void onBindViewHolder(final DatabaseRecyclerAdapter.CustomViewHolder customViewHolder,
-                                 final int position) {
-        String key = keys.get(position);
-        final Class mClass = currentNode.child(key).getClass();
-        isSubNode = false;
-        String value;
-
-
-        if (mClass == String.class) {
-            value = (String)currentNode.child(key);
-        } else if (mClass == int.class || mClass == Integer.class) {
-            value = String.valueOf((int)currentNode.child(key));
-        } else if (mClass == boolean.class || mClass == Boolean.class){
-            value = String.valueOf((boolean)currentNode.child(key));
-        } else {
-            isSubNode = true;
-            value = "subnode";
-        }
+                                 int position) {
+        final String key = keys.get(position);
 
         customViewHolder.tvKey.setText(key);
 
-        if (isSubNode) {
-            customViewHolder.tvValue.setVisibility(View.GONE);
-            customViewHolder.tvValueTitle.setVisibility(View.GONE);
-            customViewHolder.btEdit.setText(R.string.open);
+        Object child = currentNode.child(key);
+        if (child != null) {
+            Class mClass = child.getClass();
+            isSubNode = false;
+            String value;
+
+
+            if (mClass == String.class) {
+                value = (String) child;
+            } else if (mClass == int.class || mClass == Integer.class) {
+                value = String.valueOf((int) child);
+            } else if (mClass == boolean.class || mClass == Boolean.class) {
+                value = String.valueOf((boolean) child);
+            } else {
+                isSubNode = true;
+                value = "subnode";
+            }
+
+            if (isSubNode) {
+                customViewHolder.tvValue.setVisibility(View.GONE);
+                customViewHolder.tvValueTitle.setVisibility(View.GONE);
+                customViewHolder.btEdit.setText(R.string.open);
+            } else {
+                customViewHolder.tvValue.setVisibility(View.VISIBLE);
+                customViewHolder.tvValueTitle.setVisibility(View.VISIBLE);
+                customViewHolder.btEdit.setText(R.string.edit);
+                customViewHolder.tvValue.setText(String.format(" %s", value));
+            }
         } else {
-            customViewHolder.tvValue.setVisibility(View.VISIBLE);
-            customViewHolder.tvValueTitle.setVisibility(View.VISIBLE);
+            customViewHolder.tvValueTitle.setVisibility(View.GONE);
+            customViewHolder.tvValue.setText(R.string.error_loading_value);
             customViewHolder.btEdit.setText(R.string.edit);
-            customViewHolder.tvValue.setText(String.format(" %s", value));
         }
 
 
@@ -104,7 +112,7 @@ class DatabaseRecyclerAdapter
             public void onClick(View v) {
 
                 if (isSubNode){
-                    mCallback.onClickItem(keys.get(position));
+                    mCallback.onClickItem(keys.get(customViewHolder.getAdapterPosition()));
                 } else {
                     customViewHolder.llExpandView.setVisibility(View.VISIBLE);
                     customViewHolder.ivExpandViewToggle.setImageDrawable(
@@ -118,7 +126,7 @@ class DatabaseRecyclerAdapter
             @Override
             public void onClick(View v) {
                 ArrayList<String> mKeys = keys;
-                mKeys.remove(keys.get(position));
+                mKeys.remove(keys.get(customViewHolder.getAdapterPosition()));
                 mCallback.onKeysDelete(mKeys);
             }
         });
@@ -127,11 +135,17 @@ class DatabaseRecyclerAdapter
             @Override
             public void onClick(View v) {
 
+                int position = customViewHolder.getAdapterPosition();
                 if (isSubNode){
                     mCallback.onClickItem(keys.get(position));
                 } else {
-                    mCallback.onEditValue(currentNode,
-                            currentNode.child(keys.get(position)).getClass());
+                    Object child = currentNode.child(keys.get(position));
+                    if (child != null) {
+                        mCallback.onEditValue(currentNode,
+                                child.getClass());
+                    } else {
+                        mCallback.onEditValue(currentNode, String.class);
+                    }
                 }
             }
         });

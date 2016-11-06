@@ -8,7 +8,7 @@ import java.util.HashMap;
  *
  */
 
-public class NodeModel{
+class NodeModel{
 
     private NodeModel parentNode;
     private HashMap<String, Object> values;
@@ -16,11 +16,11 @@ public class NodeModel{
     private String key;
 
 
-    public NodeModel getParent() {
+    NodeModel getParent() {
         return parentNode;
     }
 
-    public void setParent(NodeModel parentNode) {
+    void setParent(NodeModel parentNode) {
         this.parentNode = parentNode;
     }
 
@@ -32,34 +32,37 @@ public class NodeModel{
         return values;
     }
 
-    public Object child(String key) {
-        return values.get(key);
+    Object child(String key) {
+        if (values.containsKey(key))
+            return values.get(key);
+        else
+            return null;
     }
 
-    public void setValues(Object value) {
+    void setValues(Object value) {
         setValues(key, value);
     }
 
-    public void setValues(String key, Object value) {
+    void setValues(String key, Object value) {
         if (values == null) {
             values = new HashMap<>();
         }
         values.put(key, value);
     }
 
-    public ArrayList<String> getKeys() {
+    ArrayList<String> getKeys() {
         return keys;
     }
 
-    public void setKeys(ArrayList<String> keys) {
+    void setKeys(ArrayList<String> keys) {
         this.keys = keys;
     }
 
-    public String getKey() {
+    String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
+    void setKey(String key) {
         this.key = key;
     }
 }

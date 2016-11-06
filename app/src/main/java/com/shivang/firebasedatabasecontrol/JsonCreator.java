@@ -287,8 +287,14 @@ class JsonCreator {
                         @Override
                         void onClickItem(String key) {
                             alertDialog.dismiss();
-                            onNodeAdd((NodeModel) currentNode.child(key),
-                                    method, mContext);
+                            Object child = currentNode.child(key);
+                            if (child != null) {
+                                onNodeAdd((NodeModel) child,
+                                        method, mContext);
+                            } else {
+                                Toast.makeText(mContext, "No child node accessible for this key!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         @Override
@@ -634,10 +640,11 @@ class JsonCreator {
             ArrayList<String> keys = currentNode.getKeys();
             if (keys != null) {
                 for (String key : keys) {
-                    if (currentNode.child(key).getClass() == NodeModel.class) {
-                        root.put(key, onParse((NodeModel) currentNode.child(key), null));
+                    Object child = currentNode.child(key);
+                    if (child.getClass() == NodeModel.class) {
+                        root.put(key, onParse((NodeModel) child, null));
                     } else {
-                        root.put(key, currentNode.child(key));
+                        root.put(key, child);
                     }
                 }
             }
