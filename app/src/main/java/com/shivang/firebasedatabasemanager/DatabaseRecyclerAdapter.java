@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2016  Shivang
+ *
  * This file is part of Firebase Database Manager.
  *
  *     Firebase Database Manager is free software: you can redistribute it and/or modify
