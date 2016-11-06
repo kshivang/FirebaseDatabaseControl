@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,7 +56,6 @@ public class DatabaseFragment extends Fragment{
     }
 
     private RecyclerView mRecyclerView;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private final static int FLAG_STRING = 0, FLAG_INT = 1,
             FLAG_BOOLEAN = 2;
@@ -212,8 +210,8 @@ public class DatabaseFragment extends Fragment{
         protected void onPostExecute(List<Map<String, String>> response) {
             DatabaseRecyclerAdapter adapter = new DatabaseRecyclerAdapter(response);
             mRecyclerView.setAdapter(adapter);
-            if (response != null)
-                ((DatabaseActivity) getContext()).onFragmentSet(response.isEmpty());
+            if (response != null && !(response.size() == 0 || response.isEmpty()))
+                ((DatabaseActivity) getContext()).onFragmentSet(false);
             else
                 ((DatabaseActivity) getContext()).onFragmentSet(true);
         }
