@@ -216,8 +216,6 @@ public class MainActivity extends AppCompatActivity{
                         }
                     }).create().show();
         } else {
-//            Toast.makeText(this, "You don't have any database instance saved!",
-//                    Toast.LENGTH_SHORT).show();
             new AlertDialog.Builder(this)
                     .setMessage("Create new json database and save locally")
                     .setPositiveButton("Create", new DialogInterface.OnClickListener() {
