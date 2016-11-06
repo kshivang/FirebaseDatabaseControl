@@ -3,7 +3,7 @@
 This is android app, which can be used to manage firebase real time databases.
 Firebase REST api is used in this project.
 
-### Download Project
+### Download
 Project available at [Google Play Store](https://play.google.com/store/apps/details?id=com.shivang.databasemanager&hl=en)
 
 ### Build Project
