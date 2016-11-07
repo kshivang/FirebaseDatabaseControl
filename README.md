@@ -16,13 +16,17 @@ Firebase REST api is used in this project.
 
 4. Build and run project on android studio as usual
 
+### Current Milestones
+If you wish to contribute to project, you can find milestones [here](https://github.com/kshivang/FirebaseDatabaseControl/milestones)
+
 ### Report Bug
 
 If you find any bug in project or if you want to suggest new feature report [here](https://github.com/kshivang/FirebaseDatabaseControl/issues/new)
 
+
 ### License
 
-      Copyright (C) 2016  Shivang
+      Copyright (C) 2016  Shivang<shivang.iitk@gmail.com>
   
       This file is part of Firebase Database Manager.
  
