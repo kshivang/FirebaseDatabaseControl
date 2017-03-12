@@ -17,7 +17,7 @@
  *     along with Firebase Database Manager.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.shivang.firebasedatabasemanager;
+package com.shivang.firebasedatabasemanager.misc;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import java.util.HashMap;
  *
  */
 
-class NodeModel{
+public class NodeModel{
 
     private NodeModel parentNode;
     private HashMap<String, Object> values;
@@ -35,11 +35,11 @@ class NodeModel{
     private String key;
 
 
-    NodeModel getParent() {
+    public NodeModel getParent() {
         return parentNode;
     }
 
-    void setParent(NodeModel parentNode) {
+    public void setParent(NodeModel parentNode) {
         this.parentNode = parentNode;
     }
 
@@ -51,37 +51,37 @@ class NodeModel{
         return values;
     }
 
-    Object child(String key) {
+    public Object child(String key) {
         if (values.containsKey(key))
             return values.get(key);
         else
             return null;
     }
 
-    void setValues(Object value) {
+    public void setValues(Object value) {
         setValues(key, value);
     }
 
-    void setValues(String key, Object value) {
+    public void setValues(String key, Object value) {
         if (values == null) {
             values = new HashMap<>();
         }
         values.put(key, value);
     }
 
-    ArrayList<String> getKeys() {
+    public ArrayList<String> getKeys() {
         return keys;
     }
 
-    void setKeys(ArrayList<String> keys) {
+    public void setKeys(ArrayList<String> keys) {
         this.keys = keys;
     }
 
-    String getKey() {
+    public String getKey() {
         return key;
     }
 
-    void setKey(String key) {
+    public void setKey(String key) {
         this.key = key;
     }
 }

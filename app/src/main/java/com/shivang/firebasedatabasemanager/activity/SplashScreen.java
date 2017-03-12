@@ -17,7 +17,7 @@
  *     along with Firebase Database Manager.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.shivang.firebasedatabasemanager;
+package com.shivang.firebasedatabasemanager.activity;
 
 import android.animation.Animator;
 import android.content.Intent;
@@ -28,7 +28,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import io.codetail.animation.ViewAnimationUtils;
+import com.shivang.firebasedatabasemanager.R;
+import com.shivang.firebasedatabasemanager.revealAnimation.ViewAnimationUtils;
+
 
 /**
  * Created by kshivang on 13/10/16.

@@ -25,7 +25,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/colorBackground"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <include layout="@layout/appbar"/>
 

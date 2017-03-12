@@ -17,7 +17,7 @@
  *     along with Firebase Database Manager.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.shivang.firebasedatabasemanager;
+package com.shivang.firebasedatabasemanager.misc;
 
 import android.content.Context;
 import android.text.TextUtils;

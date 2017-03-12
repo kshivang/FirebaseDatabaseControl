@@ -17,7 +17,7 @@
  *     along with Firebase Database Manager.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.shivang.firebasedatabasemanager;
+package com.shivang.firebasedatabasemanager.fragment;
 
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -39,6 +39,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.shivang.firebasedatabasemanager.misc.JsonCreator;
+import com.shivang.firebasedatabasemanager.misc.NodeModel;
+import com.shivang.firebasedatabasemanager.R;
+import com.shivang.firebasedatabasemanager.activity.DatabaseActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,7 +55,7 @@ import java.util.Map;
 import static com.android.volley.Request.Method.PATCH;
 import static com.android.volley.Request.Method.POST;
 import static com.android.volley.Request.Method.PUT;
-import static com.shivang.firebasedatabasemanager.JsonCreator.onValueDelete;
+import static com.shivang.firebasedatabasemanager.misc.JsonCreator.onValueDelete;
 
 /**
  * Created by kshivang on 14/10/16.

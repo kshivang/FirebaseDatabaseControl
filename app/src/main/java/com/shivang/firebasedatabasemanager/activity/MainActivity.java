@@ -17,7 +17,7 @@
  *     along with Firebase Database Manager.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.shivang.firebasedatabasemanager;
+package com.shivang.firebasedatabasemanager.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,6 +44,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.shivang.firebasedatabasemanager.R;
+import com.shivang.firebasedatabasemanager.misc.AppController;
+import com.shivang.firebasedatabasemanager.misc.JsonCreator;
+import com.shivang.firebasedatabasemanager.misc.NodeModel;
 
 import java.io.File;
 import java.io.FilenameFilter;

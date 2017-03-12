@@ -17,7 +17,7 @@
  *     along with Firebase Database Manager.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.shivang.firebasedatabasemanager;
+package com.shivang.firebasedatabasemanager.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -27,6 +27,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.shivang.firebasedatabasemanager.misc.LocalDatabaseFragment;
+import com.shivang.firebasedatabasemanager.R;
+import com.shivang.firebasedatabasemanager.misc.JsonCreator;
 
 import java.util.ArrayList;
 

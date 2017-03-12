@@ -17,7 +17,7 @@
  *     along with Firebase Database Manager.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.shivang.firebasedatabasemanager;
+package com.shivang.firebasedatabasemanager.misc;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -31,6 +31,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.shivang.firebasedatabasemanager.R;
+
 import java.util.ArrayList;
 
 /**
@@ -38,7 +40,7 @@ import java.util.ArrayList;
  *
  */
 
-class DatabaseRecyclerAdapter
+public class DatabaseRecyclerAdapter
         extends RecyclerView.Adapter<DatabaseRecyclerAdapter.CustomViewHolder> {
 
     private ArrayList<String> keys;
@@ -175,7 +177,7 @@ class DatabaseRecyclerAdapter
         return (null != keys ? keys.size() : 0);
     }
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView tvKey, tvValue, tvValueTitle;
         LinearLayout llExpandView;
         ImageView ivExpandViewToggle;
@@ -195,7 +197,7 @@ class DatabaseRecyclerAdapter
         }
     }
 
-    abstract static class Callback {
+    public abstract static class Callback {
         abstract void onKeysDelete(ArrayList<String> updatedKeys);
         abstract void onClickItem(String key);
         abstract void onEditValue(NodeModel currentNode, Class mClass);

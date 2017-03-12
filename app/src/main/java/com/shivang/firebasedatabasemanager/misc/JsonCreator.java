@@ -17,7 +17,7 @@
  *     along with Firebase Database Manager.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.shivang.firebasedatabasemanager;
+package com.shivang.firebasedatabasemanager.misc;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -47,6 +47,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.shivang.firebasedatabasemanager.R;
+import com.shivang.firebasedatabasemanager.activity.DatabaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,9 +73,9 @@ import static com.android.volley.Request.Method.PUT;
  *
  */
 
-class JsonCreator {
+public class JsonCreator {
 
-    static final int SAVE = 10;
+    public static final int SAVE = 10;
     private static final String TAG = "Database";
 
     private Context mContext;
@@ -81,7 +83,7 @@ class JsonCreator {
         mContext = context;
     }
 
-    static JsonCreator onCreate(Context context) {
+    public static JsonCreator onCreate(Context context) {
         return new JsonCreator(context);
     }
 
@@ -124,7 +126,7 @@ class JsonCreator {
         AppController.getInstance(mContext).addToRequestQueue(request, TAG);
     }
 
-    static void onValueDelete(@Nullable String key, final Context context) {
+    public static void onValueDelete(@Nullable String key, final Context context) {
 
         String url;
         if (key != null) {
@@ -166,7 +168,7 @@ class JsonCreator {
 
     }
 
-    void onAdd(final int method) {
+    public void onAdd(final int method) {
         new AlertDialog.Builder(mContext)
                 .setMessage("Import json or create new database node")
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
@@ -193,7 +195,7 @@ class JsonCreator {
 
 
 
-    static void onNodeAdd(@NonNull final NodeModel currentNode,
+    public static void onNodeAdd(@NonNull final NodeModel currentNode,
                                   final int method, final Context mContext) {
 
         ArrayList<String> keys = currentNode.getKeys();
@@ -468,7 +470,7 @@ class JsonCreator {
     }
 
     private static int type;
-    static void onValueType(final NodeModel currentNode, int identifiedType,
+    public static void onValueType(final NodeModel currentNode, int identifiedType,
                             final Context mContext, final int method) {
         if (!(identifiedType == -1)) {
             type = identifiedType;
@@ -673,7 +675,7 @@ class JsonCreator {
         return root;
     }
 
-    ArrayList<String> fileNames() {
+    public ArrayList<String> fileNames() {
         FilenameFilter jsonFilter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -687,7 +689,7 @@ class JsonCreator {
         return null;
     }
 
-    static void exportFile(final String jsonStr, final Context mContext) {
+    public static void exportFile(final String jsonStr, final Context mContext) {
         View dialogView = View.inflate(mContext, R.layout.dialog_file_name, null);
         final EditText etName = (EditText) dialogView.findViewById(R.id.et_file_name);
         AlertDialog alertDialog = new AlertDialog.Builder(mContext)
