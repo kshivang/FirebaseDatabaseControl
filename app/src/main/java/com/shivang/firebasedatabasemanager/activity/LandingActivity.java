@@ -59,7 +59,7 @@ import java.util.Arrays;
  *
  */
 
-public class MainActivity extends AppCompatActivity{
+public class LandingActivity extends AppCompatActivity{
 
     private EditText etUrl;
     private AppController appController;
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
-        appController = AppController.getInstance(MainActivity.this);
+        appController = AppController.getInstance(LandingActivity.this);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
     }
 
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity{
                         progressBar.setVisibility(View.GONE);
                         view.setVisibility(View.VISIBLE);
                         if (response != null) {
-                            startActivity(new Intent(MainActivity.this, DatabaseActivity.class)
+                            startActivity(new Intent(LandingActivity.this, DatabaseActivity.class)
                                     .putExtra("response", response)
                                     .putExtra("base", url.substring(0, url.indexOf("/.json"))));
                         }
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         progressBar.setVisibility(View.GONE);
                         view.setVisibility(View.VISIBLE);
-                        Toast.makeText(MainActivity.this, "" + error.getLocalizedMessage(),
+                        Toast.makeText(LandingActivity.this, "" + error.getLocalizedMessage(),
                                 Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity{
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
                             JsonCreator.onNodeAdd(new NodeModel(), JsonCreator.SAVE,
-                                    MainActivity.this);
+                                    LandingActivity.this);
                         }
                     })
                     .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -226,21 +226,18 @@ public class MainActivity extends AppCompatActivity{
                                 if (isCheckedItems[i]) {
                                     File file = new File(getFilesDir().getAbsolutePath()
                                             + "/" + files[i]);
-                                    if (file.exists()) {
-                                        //noinspection ResultOfMethodCallIgnored
-                                        file.delete();
+                                    if (file.exists() && file.delete()) {
                                         isDeleted = true;
                                     }
                                 }
                             }
                             if (isDeleted) {
-                                Toast.makeText(MainActivity.this, "Deleted",
+                                Toast.makeText(LandingActivity.this, "Deleted",
                                         Toast.LENGTH_SHORT).show();
-                            }
-                            else {
+                            } else {
                                 dialog.dismiss();
                                 onManageDatabase();
-                                Toast.makeText(MainActivity.this,
+                                Toast.makeText(LandingActivity.this,
                                         "You have not selected any database to delete",
                                         Toast.LENGTH_SHORT).show();
                             }
@@ -253,7 +250,7 @@ public class MainActivity extends AppCompatActivity{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             JsonCreator.onNodeAdd(new NodeModel(), JsonCreator.SAVE,
-                                    MainActivity.this);
+                                    LandingActivity.this);
                         }
                     })
                     .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {

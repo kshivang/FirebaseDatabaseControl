@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.shivang.firebasedatabasemanager.activity.MainActivity"
+        <activity android:name="com.shivang.firebasedatabasemanager.activity.LandingActivity"
             android:screenOrientation="portrait"
             />
 
