@@ -28,7 +28,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.shivang.firebasedatabasemanager.misc.LocalDatabaseFragment;
+import com.shivang.firebasedatabasemanager.fragment.LocalDatabaseFragment;
 import com.shivang.firebasedatabasemanager.R;
 import com.shivang.firebasedatabasemanager.misc.JsonCreator;
 

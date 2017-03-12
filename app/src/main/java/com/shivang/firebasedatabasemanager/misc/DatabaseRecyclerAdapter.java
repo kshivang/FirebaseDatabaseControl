@@ -40,7 +40,7 @@ import java.util.ArrayList;
  *
  */
 
-class DatabaseRecyclerAdapter
+public class DatabaseRecyclerAdapter
         extends RecyclerView.Adapter<DatabaseRecyclerAdapter.CustomViewHolder> {
 
     private ArrayList<String> keys;
@@ -49,7 +49,7 @@ class DatabaseRecyclerAdapter
     private boolean isSubNode = false;
     private Callback mCallback;
 
-    static DatabaseRecyclerAdapter newInstance(NodeModel nodeModel,
+    public static DatabaseRecyclerAdapter newInstance(NodeModel nodeModel,
                                                Context context, Callback callback) {
         return new DatabaseRecyclerAdapter(nodeModel, context, callback);
     }
@@ -197,10 +197,10 @@ class DatabaseRecyclerAdapter
         }
     }
 
-    abstract static class Callback {
-        abstract void onKeysDelete(ArrayList<String> updatedKeys);
-        abstract void onClickItem(String key);
-        abstract void onEditValue(NodeModel currentNode, Class mClass);
+    public interface Callback {
+        void onKeysDelete(ArrayList<String> updatedKeys);
+        void onClickItem(String key);
+        void onEditValue(NodeModel currentNode, Class mClass);
     }
 }
 
