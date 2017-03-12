@@ -299,14 +299,14 @@ public class JsonCreator {
                     .newInstance(currentNode, mContext,
                             new DatabaseRecyclerAdapter.Callback() {
                         @Override
-                        void onKeysDelete(ArrayList<String> updatedKeys) {
+                        public void onKeysDelete(ArrayList<String> updatedKeys) {
                             currentNode.setKeys(updatedKeys);
                             alertDialog.dismiss();
                             onNodeAdd(currentNode, method, mContext);
                         }
 
                         @Override
-                        void onClickItem(String key) {
+                        public void onClickItem(String key) {
                             alertDialog.dismiss();
                             Object child = currentNode.child(key);
                             if (child != null) {
@@ -319,7 +319,7 @@ public class JsonCreator {
                         }
 
                         @Override
-                        void onEditValue(NodeModel currentNode, Class mClass) {
+                        public void onEditValue(NodeModel currentNode, Class mClass) {
                             alertDialog.dismiss();
                             if (mClass == boolean.class || mClass == Boolean.class) {
                                 onValueType(currentNode, FLAG_BOOLEAN, mContext, PATCH);

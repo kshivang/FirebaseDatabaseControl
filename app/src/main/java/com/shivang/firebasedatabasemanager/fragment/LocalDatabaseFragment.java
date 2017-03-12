@@ -17,7 +17,7 @@
  *       along with Firebase Database Manager.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.shivang.firebasedatabasemanager.misc;
+package com.shivang.firebasedatabasemanager.fragment;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,6 +31,8 @@ import android.view.ViewGroup;
 
 import com.shivang.firebasedatabasemanager.R;
 import com.shivang.firebasedatabasemanager.activity.LocalDatabaseActivity;
+import com.shivang.firebasedatabasemanager.misc.DatabaseRecyclerAdapter;
+import com.shivang.firebasedatabasemanager.misc.NodeModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,17 +149,17 @@ public class LocalDatabaseFragment extends Fragment{
                 DatabaseRecyclerAdapter adapter = DatabaseRecyclerAdapter
                         .newInstance(response, getContext(), new DatabaseRecyclerAdapter.Callback() {
                             @Override
-                            void onKeysDelete(ArrayList<String> updatedKeys) {
+                            public void onKeysDelete(ArrayList<String> updatedKeys) {
 
                             }
 
                             @Override
-                            void onClickItem(String key) {
+                            public void onClickItem(String key) {
 
                             }
 
                             @Override
-                            void onEditValue(NodeModel currentNode, Class mClass) {
+                            public void onEditValue(NodeModel currentNode, Class mClass) {
 
                             }
                         });
