@@ -6,7 +6,7 @@ import android.view.ViewGroup;
  * Indicator for internal API that {@link ViewGroup} support
  * Circular Reveal animation
  */
-public interface RevealViewGroup {
+interface RevealViewGroup {
 
     /**
      * @return Bridge between view and circular reveal animation

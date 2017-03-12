@@ -45,23 +45,23 @@ import static com.shivang.firebasedatabasemanager.R.string.no_node_here;
  * This activity just hold the fragment
  */
 
-//Todo: This fragment would be used updated in use in another version of app
+//todo : Some fields to be updated
 public class LocalDatabaseActivity extends AppCompatActivity{
-    private String currentUri = "";
-    private String baseUri = "";
+//    private String currentUri = "";
+//    private String baseUri = "";
 
     private View progressBarHolder;
     private ProgressBar progressBar;
     private TextView errorTest;
     private View view;
-    private ActionBar actionBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actvity_database);
         findViewById(R.id.toolbar_view).setVisibility(View.GONE);
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("Local database");
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -111,18 +111,18 @@ public class LocalDatabaseActivity extends AppCompatActivity{
         }
     }
 
-    public void onForwardTransverse(String key) {
-    }
+//    public void onForwardTransverse(String key) {
+//    }
 
-    public void onRefresh() {
-    }
+//    public void onRefresh() {
+//    }
 
     private void onBackwardTransverse() {
     }
 
-    private void onUrlRequest(String url) {
-
-    }
+//    private void onUrlRequest(String url) {
+//
+//    }
 
     @Override
     public void onBackPressed() {

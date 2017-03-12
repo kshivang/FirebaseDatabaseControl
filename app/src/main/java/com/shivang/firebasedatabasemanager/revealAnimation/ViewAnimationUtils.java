@@ -4,17 +4,15 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.view.View;
 
-import com.shivang.firebasedatabasemanager.BuildConfig;
-
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.LOLLIPOP;
 
 /**
  * Created by kshivang on 13/03/17.
+ *
  */
 
 public final class ViewAnimationUtils {
-    private final static boolean DEBUG = BuildConfig.DEBUG;
 
     private final static boolean LOLLIPOP_PLUS = SDK_INT >= LOLLIPOP;
 
@@ -63,8 +61,8 @@ public final class ViewAnimationUtils {
      * @param layerType View layer type {@link View#LAYER_TYPE_HARDWARE} or {@link
      * View#LAYER_TYPE_SOFTWARE}
      */
-    public static Animator createCircularReveal(View view, int centerX, int centerY,
-                                                float startRadius, float endRadius, int layerType) {
+    private static Animator createCircularReveal(View view, int centerX, int centerY,
+                                                 float startRadius, float endRadius, int layerType) {
 
         if (!(view.getParent() instanceof RevealViewGroup)) {
             throw new IllegalArgumentException("Parent must be instance of RevealViewGroup");

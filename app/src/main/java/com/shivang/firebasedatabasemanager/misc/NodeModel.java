@@ -35,22 +35,27 @@ public class NodeModel{
     private String key;
 
 
+    @SuppressWarnings("WeakerAccess")
     public NodeModel getParent() {
         return parentNode;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void setParent(NodeModel parentNode) {
         this.parentNode = parentNode;
     }
 
+    @SuppressWarnings("unused")
     public HashMap<String, Object> getValues() {
         return values;
     }
 
+    @SuppressWarnings("unused")
     public Object getValue() {
         return values;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Object child(String key) {
         if (values.containsKey(key))
             return values.get(key);
@@ -58,10 +63,12 @@ public class NodeModel{
             return null;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void setValues(Object value) {
         setValues(key, value);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void setValues(String key, Object value) {
         if (values == null) {
             values = new HashMap<>();
@@ -69,6 +76,7 @@ public class NodeModel{
         values.put(key, value);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public ArrayList<String> getKeys() {
         return keys;
     }
@@ -77,6 +85,7 @@ public class NodeModel{
         this.keys = keys;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String getKey() {
         return key;
     }

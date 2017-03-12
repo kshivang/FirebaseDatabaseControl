@@ -46,6 +46,7 @@ import java.util.ArrayList;
  * This Fragment hold a single instance of Database
  */
 
+//todo some fields to be fixed
 public class LocalDatabaseFragment extends Fragment{
 
     private static final String FLAG_ARG = "arg";
@@ -72,10 +73,8 @@ public class LocalDatabaseFragment extends Fragment{
 //    private AppController appController;
 
     //    private int type  = -1;
-    private final static int FLAG_STRING = 0, FLAG_INT = 1,
-            FLAG_BOOLEAN = 2;
-
-    private JsonCreator jsonCreator;
+//    private final static int FLAG_STRING = 0, FLAG_INT = 1,
+//            FLAG_BOOLEAN = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -84,7 +83,8 @@ public class LocalDatabaseFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_database, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        jsonCreator = JsonCreator.onCreate(getContext());
+
+//        JsonCreator jsonCreator = JsonCreator.onCreate(getContext());
 
         getActivity().findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +100,8 @@ public class LocalDatabaseFragment extends Fragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         if (getArguments().getStringArrayList(FLAG_FILES) == null) {
             new JsonParse().execute(getArguments().getString(FLAG_ARG));
-        } else {
+
+//        } else {
 
         }
     }

@@ -40,7 +40,7 @@ import java.util.ArrayList;
  *
  */
 
-public class DatabaseRecyclerAdapter
+class DatabaseRecyclerAdapter
         extends RecyclerView.Adapter<DatabaseRecyclerAdapter.CustomViewHolder> {
 
     private ArrayList<String> keys;
@@ -177,7 +177,7 @@ public class DatabaseRecyclerAdapter
         return (null != keys ? keys.size() : 0);
     }
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder {
+    class CustomViewHolder extends RecyclerView.ViewHolder {
         TextView tvKey, tvValue, tvValueTitle;
         LinearLayout llExpandView;
         ImageView ivExpandViewToggle;
@@ -197,7 +197,7 @@ public class DatabaseRecyclerAdapter
         }
     }
 
-    public abstract static class Callback {
+    abstract static class Callback {
         abstract void onKeysDelete(ArrayList<String> updatedKeys);
         abstract void onClickItem(String key);
         abstract void onEditValue(NodeModel currentNode, Class mClass);

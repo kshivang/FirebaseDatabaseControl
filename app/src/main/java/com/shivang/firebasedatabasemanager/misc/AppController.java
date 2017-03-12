@@ -19,6 +19,7 @@
 
 package com.shivang.firebasedatabasemanager.misc;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -33,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 public class AppController {
 
     private String TAG = "appController";
+    @SuppressLint("StaticFieldLeak")
     private static AppController mInstance;
     private RequestQueue mRequestQueue;
     private Context mContext;
@@ -62,6 +64,7 @@ public class AppController {
         getRequestQueue().add(req);
     }
 
+    @SuppressWarnings("unused")
     public <T> void addToRequestQueue(Request<T> req) {
         req.setTag(TAG);
         getRequestQueue().add(req);
