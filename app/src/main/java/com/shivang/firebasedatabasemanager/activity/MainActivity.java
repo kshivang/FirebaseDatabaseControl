@@ -68,13 +68,16 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main_activity);
+
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setIcon(R.mipmap.ic_launcher);
             actionBar.setTitle(getString(R.string.firebase_database));
         }
+
         etUrl = (EditText) findViewById(R.id.etUrl);
         etUrl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +88,7 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+
         etUrl.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -129,6 +133,9 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void Access(View view) {
+        /*
+          hide keyboard if it is inflated
+         */
         if (view != null) {
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(
                     Context.INPUT_METHOD_SERVICE);
