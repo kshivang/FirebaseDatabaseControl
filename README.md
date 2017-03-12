@@ -26,7 +26,7 @@ If you find any bug in project or if you want to suggest new feature report [her
 
 ### License
 
-      Copyright (C) 2016  Shivang<shivang.iitk@gmail.com>
+      Copyright (C) 2017  Shivang<shivang.iitk@gmail.com>
   
       This file is part of Firebase Database Manager.
  
