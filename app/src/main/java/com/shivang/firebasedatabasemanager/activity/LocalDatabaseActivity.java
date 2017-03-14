@@ -28,8 +28,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.shivang.firebasedatabasemanager.fragment.LocalDatabaseFragment;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.shivang.firebasedatabasemanager.R;
+import com.shivang.firebasedatabasemanager.fragment.LocalDatabaseFragment;
 import com.shivang.firebasedatabasemanager.misc.JsonCreator;
 
 import java.util.ArrayList;
@@ -58,7 +60,13 @@ public class LocalDatabaseActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.actvity_database);
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         findViewById(R.id.toolbar_view).setVisibility(View.GONE);
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
