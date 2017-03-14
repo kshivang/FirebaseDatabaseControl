@@ -16,3 +16,6 @@ app/google-services.json
 /app/assetlinks.json
 /app/password
 /app/firebase_database.jks
+src/androidTest/
+src/main/gen/
+src/test/
