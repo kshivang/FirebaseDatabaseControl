@@ -1,2 +1,10 @@
 /build
 /google-services.json
+/password
+/*.apk
+/app.iml
+/assetlinks.json
+/firebase_database.jks
+/src/free/google-services.json
+/src/paid/google-services.json
+

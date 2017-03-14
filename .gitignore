@@ -8,9 +8,11 @@
 /captures
 .externalNativeBuild
 app/google-services.json
-app/src/free/google-services.json
-app/src/paid/google-services.json
-app/*.jks
-app/*.apk
-app/libs/
+/app/src/free/google-services.json
+/app/src/paid/google-services.json
+/app/*.apk
+/app/libs/
 !/app/build.gradle
+/app/assetlinks.json
+/app/password
+/app/firebase_database.jks
