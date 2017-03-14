@@ -49,8 +49,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="https"
-                    android:host="fir-databasecontrol.firebaseapp.com" />
+                    android:scheme="http"
+                    android:host="manager.firebase.com" />
             </intent-filter>
         </activity>
 

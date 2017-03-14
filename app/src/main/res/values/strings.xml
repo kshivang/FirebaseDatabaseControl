@@ -18,8 +18,6 @@
   -->
 
 <resources>
-    <string name="app_name">Firebase Database Manager</string>
-    <string name="firebase_database">Firebase Database</string>
     <string name="access">Access</string>
     <string name="firebase_base_url">Firebase Base URL</string>
     <string name="https_fir_databasecontrol_firebaseio_com">https://example.firebaseio.com/</string>
@@ -54,7 +52,6 @@
     <string name="value_">Value</string>
     <string name="choose_key">Choose key</string>
     <string name="error_loading_value">Error Loading Value</string>
-    <string name="banner_ad_unit_id">ca-app-pub-1527181138046629/7313801798</string>
 
 
     <array name="value_type">
