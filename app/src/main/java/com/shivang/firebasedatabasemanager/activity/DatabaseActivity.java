@@ -38,6 +38,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.shivang.firebasedatabasemanager.R;
 import com.shivang.firebasedatabasemanager.fragment.DatabaseFragment;
 import com.shivang.firebasedatabasemanager.misc.AppController;
@@ -71,7 +73,13 @@ public class DatabaseActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.actvity_database);
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
@@ -203,7 +211,7 @@ public class DatabaseActivity extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         internetProblem = true;
                         progressBarHolder.setVisibility(View.VISIBLE);
-                        errorTest.setText(R.string.intenet_problem);
+                        errorTest.setText(R.string.internet_problem);
                         errorTest.setVisibility(View.VISIBLE);
                         mSwipeRefreshLayout.setRefreshing(false);
 
