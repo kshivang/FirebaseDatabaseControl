@@ -27,6 +27,12 @@ android {
             storeFile file('/Users/kshivang/Desktop/firebase_database.jks')
             storePassword 'kuchnaya'
         }
+        paid {
+            keyAlias 'androidkey'
+            keyPassword 'kuchnaya'
+            storeFile file('/Users/kshivang/Desktop/firebase_database_pro.jks')
+            storePassword 'kuchnaya'
+        }
     }
 
     defaultConfig {
@@ -55,6 +61,7 @@ android {
             applicationIdSuffix ".paid"
             versionCode 1
             versionName '1.0.0'
+            signingConfig signingConfigs.paid
         }
     }
 }
