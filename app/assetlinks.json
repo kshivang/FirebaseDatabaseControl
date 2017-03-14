@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.shivang.databasemanager",
+    "sha256_cert_fingerprints":
+    ["CB:26:8C:61:68:BC:5A:E7:BA:3C:E3:FA:67:E3:05:BE:44:1C:75:79:8B:21:FA:3A:3E:84:2A:6B:09:DB:E2:06"]
+  }
+}]
