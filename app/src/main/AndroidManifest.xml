@@ -30,23 +30,34 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
-        <activity android:name="com.shivang.firebasedatabasemanager.activity.SplashScreen"
-            android:screenOrientation="portrait"
-            >
+        <activity
+            android:name="com.shivang.firebasedatabasemanager.activity.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name="com.shivang.firebasedatabasemanager.activity.LandingActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name="com.shivang.firebasedatabasemanager.activity.LandingActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-        <activity android:name="com.shivang.firebasedatabasemanager.activity.DatabaseActivity"
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="manager.firebase.com" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.shivang.firebasedatabasemanager.activity.DatabaseActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            />
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

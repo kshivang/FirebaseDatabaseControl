@@ -22,6 +22,7 @@ package com.shivang.firebasedatabasemanager.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -69,7 +70,7 @@ public class LandingActivity extends AppCompatActivity{
     private static final String TAG = "base";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState){
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_landing_activity);
@@ -78,7 +79,7 @@ public class LandingActivity extends AppCompatActivity{
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setIcon(R.mipmap.ic_launcher);
@@ -105,6 +106,10 @@ public class LandingActivity extends AppCompatActivity{
         });
         appController = AppController.getInstance(LandingActivity.this);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        // ATTENTION: This was auto-generated to handle app links.
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Uri appLinkData = appLinkIntent.getData();
     }
 
     @Override
