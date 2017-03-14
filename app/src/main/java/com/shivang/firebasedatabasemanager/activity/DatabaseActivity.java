@@ -33,15 +33,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.shivang.firebasedatabasemanager.fragment.DatabaseFragment;
 import com.shivang.firebasedatabasemanager.R;
+import com.shivang.firebasedatabasemanager.fragment.DatabaseFragment;
 import com.shivang.firebasedatabasemanager.misc.AppController;
+import com.shivang.firebasedatabasemanager.misc.JsonCreator;
 
 import static com.shivang.firebasedatabasemanager.R.string.no_node_here;
 
@@ -203,14 +203,14 @@ public class DatabaseActivity extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         internetProblem = true;
                         progressBarHolder.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.GONE);
                         errorTest.setText(R.string.intenet_problem);
                         errorTest.setVisibility(View.VISIBLE);
                         mSwipeRefreshLayout.setRefreshing(false);
 
                         view.setVisibility(View.GONE);
-                        Toast.makeText(DatabaseActivity.this, "" + error.getLocalizedMessage(),
-                                Toast.LENGTH_LONG).show();
+                        JsonCreator.onRequestError(DatabaseActivity.this,
+                                error, progressBar, null);
+
                     }
                 }) {
             @Override

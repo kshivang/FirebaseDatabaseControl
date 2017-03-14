@@ -158,6 +158,8 @@ public class LandingActivity extends AppCompatActivity{
         }
     }
 
+
+
     private void onBaseUrlRequest(final String url, final View view) {
         StringRequest request =new StringRequest
                 (Request.Method.GET, url, new Response.Listener<String>() {
@@ -176,8 +178,7 @@ public class LandingActivity extends AppCompatActivity{
                     public void onErrorResponse(VolleyError error) {
                         progressBar.setVisibility(View.GONE);
                         view.setVisibility(View.VISIBLE);
-                        Toast.makeText(LandingActivity.this, "" + error.getLocalizedMessage(),
-                                Toast.LENGTH_LONG).show();
+                        JsonCreator.onRequestError(LandingActivity.this, error, progressBar, view);
                     }
                 }) {
             @Override

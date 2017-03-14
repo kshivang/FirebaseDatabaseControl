@@ -38,10 +38,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -78,15 +80,6 @@ public class JsonCreator {
     public static final int SAVE = 10;
     private static final String TAG = "Database";
 
-    private Context mContext;
-    private JsonCreator(Context context) {
-        mContext = context;
-    }
-
-    public static JsonCreator onCreate(Context context) {
-        return new JsonCreator(context);
-    }
-
     private final static int FLAG_STRING = 0, FLAG_INT = 1,
             FLAG_BOOLEAN = 2;
 
@@ -113,8 +106,7 @@ public class JsonCreator {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
-                Toast.makeText(mContext, "" + error.getLocalizedMessage(),
-                        Toast.LENGTH_SHORT).show();
+                onRequestError(mContext, error, null, null);
             }
         }) {
             @Override
@@ -126,14 +118,14 @@ public class JsonCreator {
         AppController.getInstance(mContext).addToRequestQueue(request, TAG);
     }
 
-    public static void onValueDelete(@Nullable String key, final Context context) {
+    public static void onValueDelete(@Nullable String key, final Context mContext) {
 
         String url;
         if (key != null) {
-            url = ((DatabaseActivity) context).getCurrentURL() + "/" + key + ".json";
+            url = ((DatabaseActivity) mContext).getCurrentURL() + "/" + key + ".json";
         } else {
-            url = ((DatabaseActivity) context).getCurrentURL();
-            if (((DatabaseActivity) context).isBaseUrl()) {
+            url = ((DatabaseActivity) mContext).getCurrentURL();
+            if (((DatabaseActivity) mContext).isBaseUrl()) {
                 url = url + "/.json";
             } else {
                 url = url + ".json";
@@ -141,21 +133,21 @@ public class JsonCreator {
         }
 
 
-        onProgress(context);
+        onProgress(mContext);
         StringRequest request = new StringRequest(Request.Method.DELETE, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
-                        Toast.makeText(context, "Value changed!", Toast.LENGTH_SHORT).show();
-                        ((DatabaseActivity)context).onRefresh();
+                        Toast.makeText(mContext, "Value changed!", Toast.LENGTH_SHORT).show();
+                        ((DatabaseActivity)mContext).onRefresh();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
-                Toast.makeText(context, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                ((DatabaseActivity)context).onRefresh();
+                onRequestError(mContext, error, null, null);
+                ((DatabaseActivity)mContext).onRefresh();
             }
         }) {
             @Override
@@ -164,11 +156,11 @@ public class JsonCreator {
             }
         };
         request.setShouldCache(false);
-        AppController.getInstance(context).addToRequestQueue(request, TAG);
+        AppController.getInstance(mContext).addToRequestQueue(request, TAG);
 
     }
 
-    public void onAdd(final int method) {
+    public static void onAdd(final Context mContext, final int method) {
         new AlertDialog.Builder(mContext)
                 .setMessage("Import json or create new database node")
                 .setPositiveButton("Create", new DialogInterface.OnClickListener() {
@@ -188,7 +180,7 @@ public class JsonCreator {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        onJsonFileSelect(method);
+                        onJsonFileSelect(mContext, method);
                     }
                 }).create().show();
     }
@@ -407,8 +399,8 @@ public class JsonCreator {
         alertDialog.show();
     }
 
-    private void onJsonFileSelect(final int method) {
-        final ArrayList<String> filesNames = fileNames();
+    private static void onJsonFileSelect(final Context mContext, final int method) {
+        final ArrayList<String> filesNames = fileNames(mContext);
         View dialogView = View.inflate(mContext,
                 R.layout.dialog_select_file, null);
         ListView list = (ListView) dialogView.findViewById(R.id.list);
@@ -465,8 +457,6 @@ public class JsonCreator {
             Toast.makeText(mContext, "You don't have any instance of database saved",
                     Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     private static int type;
@@ -675,7 +665,7 @@ public class JsonCreator {
         return root;
     }
 
-    public ArrayList<String> fileNames() {
+    public static ArrayList<String> fileNames(Context mContext) {
         FilenameFilter jsonFilter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -747,5 +737,44 @@ public class JsonCreator {
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setMessage("Changing value");
         progressDialog.show();
+    }
+
+    private static String trimMessage(String json, String key){
+        String trimmedString;
+
+        try{
+            JSONObject obj = new JSONObject(json);
+            trimmedString = obj.getString(key);
+        } catch(JSONException e){
+            e.printStackTrace();
+            return null;
+        }
+
+        return trimmedString;
+    }
+
+    public static void onRequestError (Context mContext, VolleyError error,
+                                       ProgressBar progressBar, View view) {
+        String json;
+        NetworkResponse response = error.networkResponse;
+        if (response != null && response.data != null) {
+            json = new String(response.data);
+            json = trimMessage(json, "error");
+            if (json != null) {
+                Toast.makeText(mContext, json,
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else if (response != null) {
+            Toast.makeText(mContext,
+                    "Server Error", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mContext, "Check Internet Connection",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        if (progressBar != null)
+            progressBar.setVisibility(View.GONE);
+        if (view != null)
+            view.setVisibility(View.VISIBLE);
     }
 }

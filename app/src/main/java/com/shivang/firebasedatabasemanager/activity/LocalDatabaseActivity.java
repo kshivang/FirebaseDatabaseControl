@@ -70,7 +70,7 @@ public class LocalDatabaseActivity extends AppCompatActivity{
         progressBar = (ProgressBar)  findViewById(R.id.progress_bar);
         errorTest = (TextView) findViewById(R.id.error_text);
         view = findViewById(R.id.fragment);
-        onLocalDatabaseFragment((JsonCreator.onCreate(this)).fileNames(), null);
+        onLocalDatabaseFragment(JsonCreator.fileNames(this), null);
     }
 
     public void home(View view) {

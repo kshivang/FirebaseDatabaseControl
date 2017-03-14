@@ -84,8 +84,6 @@ public class DatabaseFragment extends Fragment{
     private final static int FLAG_STRING = 0, FLAG_INT = 1,
             FLAG_BOOLEAN = 2;
 
-    private JsonCreator jsonCreator;
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,7 +91,6 @@ public class DatabaseFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.fragment_database, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        jsonCreator = JsonCreator.onCreate(getContext());
 
         getActivity().findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,14 +119,14 @@ public class DatabaseFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                jsonCreator.onAdd(PATCH);
+                JsonCreator.onAdd(getContext(), PATCH);
             }
         });
         dialogView.findViewById(R.id.bt_home).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                jsonCreator.onAdd(POST);
+                JsonCreator.onAdd(getContext(), POST);
             }
         });
         dialogView.findViewById(R.id.bt_action).setOnClickListener(new View.OnClickListener() {
@@ -146,14 +143,14 @@ public class DatabaseFragment extends Fragment{
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                jsonCreator.onAdd(PUT);
+                                JsonCreator.onAdd(getContext(), PUT);
                             }
                         })
                         .setNeutralButton("Patch", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                jsonCreator.onAdd(PATCH);
+                                JsonCreator.onAdd(getContext(), PATCH);
                             }
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
