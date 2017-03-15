@@ -130,6 +130,10 @@ public class LandingActivity extends AppCompatActivity{
             case R.id.action_local_database:
                 onManageDatabase();
                 return true;
+            case R.id.action_remove_ads:
+                startActivity(new Intent(Intent.ACTION_VIEW)
+                        .setData(Uri.parse(getString(R.string.url_paid_version))));
+                return true;
             case R.id.action_exit :
                 finish();
                 return true;
