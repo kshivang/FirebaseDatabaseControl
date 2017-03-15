@@ -39,7 +39,6 @@ android {
         applicationId "com.shivang.databasemanager"
         minSdkVersion 16
         targetSdkVersion 25
-//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
