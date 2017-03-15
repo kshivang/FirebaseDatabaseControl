@@ -231,10 +231,9 @@ public class DatabaseFragment extends Fragment{
         protected void onPostExecute(List<Map<String, String>> response) {
             DatabaseRecyclerAdapter adapter = new DatabaseRecyclerAdapter(response);
             mRecyclerView.setAdapter(adapter);
-            if (response != null && !(response.size() == 0 || response.isEmpty()))
-                ((DatabaseActivity) getContext()).onFragmentSet(false);
-            else
-                ((DatabaseActivity) getContext()).onFragmentSet(true);
+            ((DatabaseActivity) getContext())
+                    .onFragmentSet(response == null ||
+                            response.size() == 0  || response.isEmpty());
         }
     }
 
