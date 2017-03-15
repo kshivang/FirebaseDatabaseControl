@@ -755,26 +755,31 @@ public class JsonCreator {
 
     public static void onRequestError (Context mContext, VolleyError error,
                                        ProgressBar progressBar, View view) {
-        String json;
-        NetworkResponse response = error.networkResponse;
-        if (response != null && response.data != null) {
-            json = new String(response.data);
-            json = trimMessage(json, "error");
-            if (json != null) {
-                Toast.makeText(mContext, json,
+        if (error != null) {
+            String json;
+            NetworkResponse response = error.networkResponse;
+            if (response != null && response.data != null) {
+                json = new String(response.data);
+                json = trimMessage(json, mContext.getString(R.string.error));
+                if (json != null) {
+                    Toast.makeText(mContext, json,
+                            Toast.LENGTH_SHORT).show();
+                }
+            } else if (response != null) {
+                Toast.makeText(mContext,
+                        R.string.server_error, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, R.string.connection_error,
                         Toast.LENGTH_SHORT).show();
             }
-        } else if (response != null) {
-            Toast.makeText(mContext,
-                    "Server Error", Toast.LENGTH_SHORT).show();
+
+            if (progressBar != null)
+                progressBar.setVisibility(View.GONE);
+            if (view != null)
+                view.setVisibility(View.VISIBLE);
         } else {
-            Toast.makeText(mContext, "Check Internet Connection",
+            Toast.makeText(mContext, R.string.connection_error,
                     Toast.LENGTH_SHORT).show();
         }
-
-        if (progressBar != null)
-            progressBar.setVisibility(View.GONE);
-        if (view != null)
-            view.setVisibility(View.VISIBLE);
     }
 }

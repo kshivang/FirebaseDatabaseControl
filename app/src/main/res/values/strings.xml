@@ -54,6 +54,9 @@
     <string name="error_loading_value">Error Loading Value</string>
     <string name="get_pro">Get Pro</string>
     <string name="url_paid_version">https://play.google.com/store/apps/details?id=com.shivang.databasemanager.paid</string>
+    <string name="connection_error">Check Internet Connection</string>
+    <string name="server_error">Server Error</string>
+    <string name="error">error</string>
 
 
     <array name="value_type">
