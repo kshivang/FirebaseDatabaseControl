@@ -82,30 +82,32 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/android:background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id">
+        </com.google.android.gms.ads.AdView>
         <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/adView"
-            android:layout_margin="@dimen/layout_margin"
+            android:layout_above="@+id/ll"
+            android:layout_below="@+id/android:background"
+            android:layout_marginLeft="@dimen/layout_margin"
+            android:layout_marginRight="@dimen/layout_margin"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
             android:id="@+id/swipe"
             >
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/fragment"
                 />
         </android.support.v4.widget.SwipeRefreshLayout>
-
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_above="@+id/ll"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id">
-        </com.google.android.gms.ads.AdView>
 
         <LinearLayout
             android:layout_width="match_parent"

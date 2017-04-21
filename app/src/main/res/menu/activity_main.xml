@@ -31,6 +31,24 @@
         android:title="@string/local_database"
         app:showAsAction="never"
         />
+    <!--<item-->
+        <!--android:id="@+id/action_remove_ads"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/get_pro"-->
+        <!--app:showAsAction="never"-->
+        <!--/>-->
+    <item
+        android:id="@+id/action_clear_auth"
+        android:orderInCategory="200"
+        android:title="@string/clear_auth"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/action_clear_last_url"
+        android:orderInCategory="200"
+        android:title="@string/clear_last_url"
+        app:showAsAction="never"
+        />
     <item
         android:id="@+id/action_exit"
         android:orderInCategory="200"
