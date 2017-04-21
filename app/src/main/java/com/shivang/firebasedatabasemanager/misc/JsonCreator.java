@@ -19,9 +19,13 @@
 
 package com.shivang.firebasedatabasemanager.misc;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -34,9 +38,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
@@ -49,8 +58,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.shivang.firebasedatabasemanager.BuildConfig;
 import com.shivang.firebasedatabasemanager.R;
-import com.shivang.firebasedatabasemanager.activity.DatabaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,27 +95,35 @@ public class JsonCreator {
 
     private static void onDatabaseUpdate(JSONObject object, int method,
                                          final Context mContext) {
-        String url = ((DatabaseActivity) mContext).getCurrentURL();
-        if (((DatabaseActivity) mContext).isBaseUrl()) {
+        String url = ((DatabaseOperations) mContext).getCurrentUrl();
+        if (((DatabaseOperations) mContext).isBaseUrl()) {
             url = url + "/.json";
         } else {
             url = url + ".json";
         }
 
         onProgress(mContext);
+        final String finalUrl = url;
         JsonObjectRequest request = new JsonObjectRequest(method, url, object,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        onAuthSave(mContext, finalUrl);
                         progressDialog.dismiss();
                         Toast.makeText(mContext, "Value changed!", Toast.LENGTH_SHORT).show();
-                        ((DatabaseActivity)mContext).onRefresh();
+                        ((DatabaseOperations)mContext).onRefresh();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
-                onRequestError(mContext, error, null, null);
+                String url = ((DatabaseOperations) mContext).getCurrentUrl();
+                if (((DatabaseOperations) mContext).isBaseUrl()) {
+                    url = url + "/.json";
+                } else {
+                    url = url + ".json";
+                }
+                onRequestError(mContext, error, url, null, null);
             }
         }) {
             @Override
@@ -118,36 +135,48 @@ public class JsonCreator {
         AppController.getInstance(mContext).addToRequestQueue(request, TAG);
     }
 
-    public static void onValueDelete(@Nullable String key, final Context mContext) {
+    public static void onValueDelete(@Nullable final String key, final Context mContext) {
 
         String url;
         if (key != null) {
-            url = ((DatabaseActivity) mContext).getCurrentURL() + "/" + key + ".json";
+            url = ((DatabaseOperations) mContext).getCurrentUrl() + "/" + key + ".json";
         } else {
-            url = ((DatabaseActivity) mContext).getCurrentURL();
-            if (((DatabaseActivity) mContext).isBaseUrl()) {
+            url = ((DatabaseOperations) mContext).getCurrentUrl();
+            if (((DatabaseOperations) mContext).isBaseUrl()) {
                 url = url + "/.json";
             } else {
                 url = url + ".json";
             }
         }
-
-
+        
         onProgress(mContext);
+        final String finalUrl = url;
         StringRequest request = new StringRequest(Request.Method.DELETE, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        onAuthSave(mContext, finalUrl);
                         progressDialog.dismiss();
                         Toast.makeText(mContext, "Value changed!", Toast.LENGTH_SHORT).show();
-                        ((DatabaseActivity)mContext).onRefresh();
+                        ((DatabaseOperations)mContext).onRefresh();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
-                onRequestError(mContext, error, null, null);
-                ((DatabaseActivity)mContext).onRefresh();
+                String url;
+                if (key != null) {
+                    url = ((DatabaseOperations) mContext).getCurrentUrl() + "/" + key + ".json";
+                } else {
+                    url = ((DatabaseOperations) mContext).getCurrentUrl();
+                    if (((DatabaseOperations) mContext).isBaseUrl()) {
+                        url = url + "/.json";
+                    } else {
+                        url = url + ".json";
+                    }
+                }
+                onRequestError(mContext, error, url, null, null);
+                ((DatabaseOperations)mContext).onRefresh();
             }
         }) {
             @Override
@@ -689,15 +718,16 @@ public class JsonCreator {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (TextUtils.isEmpty(etName.getText())) {
-                            if (mContext.getClass() == DatabaseActivity.class) {
-                                mCreateAndSaveFile(((DatabaseActivity) mContext)
-                                                .getCurrentURL()
+                            try {
+                                mCreateAndSaveFile(((DatabaseOperations) mContext)
+                                                .getCurrentUrl()
                                                 .replace("https://", "")
                                                 .replaceAll("\\.", "_") + ".json",
                                         jsonStr, mContext);
-                            } else {
+                            } catch (ClassCastException e) {
                                 Toast.makeText(mContext, "You can't leave file name empty",
                                         Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
                                 exportFile(jsonStr, mContext);
                             }
                         } else {
@@ -752,9 +782,121 @@ public class JsonCreator {
 
         return trimmedString;
     }
+    
+    @SuppressLint("SetJavaScriptEnabled")
+    private static void onAuth(@Nullable final ProgressBar progressBar,
+                               @Nullable final View view,
+                               final String url,
+                               final Context mContext) {
+        SharedPreferences localDatabase = mContext
+                .getSharedPreferences(BuildConfig.APPLICATION_ID, Context.MODE_PRIVATE);
+        
+        if (url.contains("?auth=")
+                || localDatabase.getString("auth", null) == null) {
 
-    public static void onRequestError (Context mContext, VolleyError error,
+            final String newUrl = "https://console.firebase.google.com/project/" +
+                    url.substring(8, url.indexOf(".firebaseio.com")) +
+                    "/settings/serviceaccounts/databasesecrets";
+            final Dialog dialog = new Dialog(mContext);
+            dialog.setContentView(R.layout.dialog_secret);
+            dialog.setTitle("Copy App secret");
+            dialog.setCancelable(true);
+            dialog.show();
+            final WebView webView = (WebView) dialog
+                    .findViewById(R.id.webView);
+            final ProgressBar dialogProgressBar = (ProgressBar) dialog
+                    .findViewById(R.id.progress_bar);
+            final LinearLayout pasteView = (LinearLayout) dialog
+                    .findViewById(R.id.paste_view);
+            final EditText etSecret = (EditText) dialog
+                    .findViewById(R.id.etSecret);
+            Button btOkay = (Button) dialog.findViewById(R.id.bt_okay);
+            btOkay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (TextUtils.isEmpty(etSecret.getText())) {
+                        Toast.makeText(mContext, "Paste Auth token first!",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (progressBar != null) {
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                        if (view != null) {
+                            view.setVisibility(View.GONE);
+                        }
+                        if (url.contains("?auth=")) {
+                            ((AuthRequest)mContext).onUrlRequest(url.substring(0,
+                                    url.indexOf("=")) +
+                                    etSecret.getText(), view);
+                        } else {
+                            ((AuthRequest)mContext).onUrlRequest(url + "?auth=" + etSecret.getText(),
+                                    view);
+                        }
+                        Toast.makeText(mContext,
+                                "Requesting with Auth!", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                }
+                    
+            });
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view,
+                                                        WebResourceRequest request) {
+                    return false;
+                }
+
+                @Override
+                public void onPageStarted(WebView view, String url,
+                                          Bitmap favicon) {
+                    super.onPageStarted(view, url, favicon);
+                    dialogProgressBar.setVisibility(View.VISIBLE);
+                    pasteView.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    dialogProgressBar.setVisibility(View.GONE);
+                    if (url.equals(newUrl)) {
+                        pasteView.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            webView.loadUrl(newUrl);
+        } else {
+            if (url.contains("?auth=")) {
+                ((AuthRequest)mContext).onUrlRequest(url.substring(0,
+                        url.indexOf("=")) +
+                        localDatabase.getString("auth", null), view);
+            } else {
+                ((AuthRequest)mContext).onUrlRequest(url +
+                        "?auth=" +
+                        localDatabase.getString("auth", null), view);
+            }
+            Toast.makeText(mContext,
+                    "Requesting with Auth!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static void onAuthSave(Context mContext, String url) {
+        SharedPreferences localDatabase = mContext.getSharedPreferences(BuildConfig.APPLICATION_ID,
+                Context.MODE_PRIVATE);
+        if (url.contains("?auth=")) {
+            localDatabase.edit()
+                    .putString("auth", url.substring(url.indexOf("=") + 1))
+                    .apply();
+        }
+    }
+    
+    public static boolean onRequestError (Context mContext, VolleyError error, String url,
                                        ProgressBar progressBar, View view) {
+        if (progressBar != null)
+            progressBar.setVisibility(View.GONE);
+        if (view != null)
+            view.setVisibility(View.VISIBLE);
+
         if (error != null) {
             String json;
             NetworkResponse response = error.networkResponse;
@@ -762,8 +904,12 @@ public class JsonCreator {
                 json = new String(response.data);
                 json = trimMessage(json, mContext.getString(R.string.error));
                 if (json != null) {
-                    Toast.makeText(mContext, json,
-                            Toast.LENGTH_SHORT).show();
+                    if (json.toLowerCase().contains("permission denied")) {
+                        onAuth(progressBar, view, url, mContext);
+                    } else {
+                        Toast.makeText(mContext, json,
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             } else if (response != null) {
                 Toast.makeText(mContext,
@@ -772,14 +918,21 @@ public class JsonCreator {
                 Toast.makeText(mContext, R.string.connection_error,
                         Toast.LENGTH_SHORT).show();
             }
-
-            if (progressBar != null)
-                progressBar.setVisibility(View.GONE);
-            if (view != null)
-                view.setVisibility(View.VISIBLE);
+            return false;
         } else {
             Toast.makeText(mContext, R.string.connection_error,
                     Toast.LENGTH_SHORT).show();
+            return true;
         }
+    }
+
+    public interface AuthRequest {
+        void onUrlRequest(String url, View view);
+    }
+    
+    public interface DatabaseOperations {
+        String getCurrentUrl();
+        Boolean isBaseUrl();
+        void onRefresh();
     }
 }

@@ -23,8 +23,7 @@
     <string name="https_fir_databasecontrol_firebaseio_com">https://example.firebaseio.com/</string>
     <string name="go">Go</string>
     <string name="base_url_init">https://.firebaseio.com</string>
-    <string name="note">Note: To use this app, your database rule must be set
-        read access to public.</string>
+    <string name="note">Note: For firebase with rule set not public, use your google credentials to get firebase project secret.</string>
     <string name="help">Help</string>
     <string name="welcome">Welcome</string>
     <string name="message_slide_one">This app is exclusively made for
@@ -57,6 +56,8 @@
     <string name="connection_error">Check Internet Connection</string>
     <string name="server_error">Server Error</string>
     <string name="error">error</string>
+    <string name="clear_auth">Clear Auth</string>
+    <string name="clear_last_url">Clear Last Url</string>
 
 
     <array name="value_type">

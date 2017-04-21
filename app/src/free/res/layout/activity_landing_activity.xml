@@ -76,7 +76,7 @@
                     android:layout_marginTop="30dp"
                     android:text="@string/access"
                     android:id="@+id/bt_access"
-                    android:onClick="Access"
+                    android:onClick="onAccess"
                     />
                 <ProgressBar
                     android:layout_width="wrap_content"

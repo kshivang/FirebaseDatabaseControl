@@ -20,6 +20,7 @@
 package com.shivang.firebasedatabasemanager.activity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -33,6 +34,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -40,6 +42,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.shivang.firebasedatabasemanager.BuildConfig;
 import com.shivang.firebasedatabasemanager.R;
 import com.shivang.firebasedatabasemanager.fragment.DatabaseFragment;
 import com.shivang.firebasedatabasemanager.misc.AppController;
@@ -56,7 +59,8 @@ import static com.shivang.firebasedatabasemanager.R.string.no_node_here;
  * This activity just hold the fragment
  */
 
-public class DatabaseActivity extends AppCompatActivity{
+public class DatabaseActivity extends AppCompatActivity implements
+        JsonCreator.AuthRequest, JsonCreator.DatabaseOperations{
     private String baseURL;
     private String currentURL;
     private static final String TAG = "Database";
@@ -193,41 +197,47 @@ public class DatabaseActivity extends AppCompatActivity{
         onUrlRequest(currentURL + ".json");
     }
 
-    private void onUrlRequest(String url) {
-        progressBarHolder.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        errorTest.setVisibility(View.GONE);
-        view.setVisibility(View.GONE);
-        StringRequest request =new StringRequest
-                (Request.Method.GET, url, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        internetProblem = false;
-                        onDatabaseFragment(response);
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        internetProblem = true;
-                        progressBarHolder.setVisibility(View.VISIBLE);
-                        errorTest.setText(R.string.internet_problem);
-                        errorTest.setVisibility(View.VISIBLE);
-                        mSwipeRefreshLayout.setRefreshing(false);
+    private void onUrlRequest(final String url) {
+        if (url.contains("https://") && url.contains(".firebaseio.com")) {
+            progressBarHolder.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            errorTest.setVisibility(View.GONE);
+            view.setVisibility(View.GONE);
+            StringRequest request = new StringRequest
+                    (Request.Method.GET, url, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            internetProblem = false;
+                            onDatabaseFragment(response);
+                            mSwipeRefreshLayout.setRefreshing(false);
+                            JsonCreator.onAuthSave(DatabaseActivity.this, url);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            internetProblem = JsonCreator.onRequestError(DatabaseActivity.this,
+                                    error, url, progressBar, null);
+                            if (internetProblem) {
+                                errorTest.setText(R.string.internet_problem);
+                                errorTest.setVisibility(View.VISIBLE);
+                                progressBarHolder.setVisibility(View.VISIBLE);
+                                mSwipeRefreshLayout.setRefreshing(false);
+                                view.setVisibility(View.GONE);
+                            }
 
-                        view.setVisibility(View.GONE);
-                        JsonCreator.onRequestError(DatabaseActivity.this,
-                                error, progressBar, null);
-
-                    }
-                }) {
-            @Override
-            public Priority getPriority() {
-                return Priority.HIGH;
-            }
-        };
-        request.setShouldCache(false);
-        appController.addToRequestQueue(request, TAG);
+                        }
+                    }) {
+                @Override
+                public Priority getPriority() {
+                    return Priority.HIGH;
+                }
+            };
+            request.setShouldCache(false);
+            appController.addToRequestQueue(request, TAG);
+        } else {
+            Toast.makeText(this, "You entered a invalid firebase url!",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -251,11 +261,16 @@ public class DatabaseActivity extends AppCompatActivity{
     }
 
 
-    public String getCurrentURL() {
+    public String getCurrentUrl() {
         return currentURL;
     }
 
     public Boolean isBaseUrl() {
         return baseURL.equals(currentURL);
+    }
+
+    @Override
+    public void onUrlRequest(String url, View view) {
+        onUrlRequest(url);
     }
 }
