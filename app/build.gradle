@@ -24,7 +24,7 @@ android {
         free {
             keyAlias 'androidKey'
             keyPassword 'kuchnaya'
-            storeFile file('/Users/kshivang/Desktop/firebase_database.jks')
+            storeFile file('/Users/kshivang/Desktop/jks/firebase_database.jks')
             storePassword 'kuchnaya'
         }
         paid {
