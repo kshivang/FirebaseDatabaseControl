@@ -30,7 +30,7 @@ android {
         paid {
             keyAlias 'androidkey'
             keyPassword 'kuchnaya'
-            storeFile file('/Users/kshivang/Desktop/firebase_database_pro.jks')
+            storeFile file('/Users/kshivang/Desktop/jks/firebase_database_pro.jks')
             storePassword 'kuchnaya'
         }
     }
@@ -51,8 +51,8 @@ android {
     productFlavors {
         free {
             applicationId "com.shivang.databasemanager"
-            versionCode 6
-            versionName "1.0.6"
+            versionCode 7
+            versionName "1.0.7"
             signingConfig signingConfigs.free
         }
         paid {
@@ -67,10 +67,10 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.android.volley:volley:1.0.0'
-    compile 'com.android.support:cardview-v7:25.2.0'
+    compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.google.firebase:firebase-crash:10.0.1'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
